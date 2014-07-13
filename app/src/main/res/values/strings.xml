@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Niyo Speech</string>
+    <string name="service_name">Niyo Speech Service</string>
+</resources>

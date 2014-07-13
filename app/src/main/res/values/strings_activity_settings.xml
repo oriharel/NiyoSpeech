@@ -1,0 +1,11 @@
+<resources>
+    
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_niyo_speech">Enable Niyo Speaker</string>
+    <string name="pref_description_niyo_speech">Will read every notification!</string>
+
+</resources>
