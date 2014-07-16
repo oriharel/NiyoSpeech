@@ -10,11 +10,6 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service
@@ -27,9 +22,21 @@
         </service>
 
         <activity
-            android:name=".SettingsActivity2"
-            android:label="@string/title_activity_settings_activity2" >
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
+        <provider
+            android:name=".SpeechProvider"
+            android:authorities="com.niyo.speech.provider"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
     </application>
 
 </manifest>

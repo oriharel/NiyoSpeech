@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="speech.niyo.com.niyospeech.MainActivity">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/appslist"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        tools:listitem="@layout/pkg_list_item" />
+</RelativeLayout>

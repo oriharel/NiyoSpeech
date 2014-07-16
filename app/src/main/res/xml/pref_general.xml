@@ -2,8 +2,8 @@
 
     <CheckBoxPreference
         android:key="example_checkbox"
-        android:title="@string/pref_title_social_recommendations"
-        android:summary="@string/pref_description_social_recommendations"
+        android:title="@string/pref_title_niyo_speech"
+        android:summary="@string/pref_description_niyo_speech"
         android:defaultValue="true" />
 
 </PreferenceScreen>
