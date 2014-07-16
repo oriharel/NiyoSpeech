@@ -70,6 +70,8 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         getLoaderManager().initLoader(0, null, mLoader);
         mAppsList.setSelection(0);
 
+        new LoadIconsTask().execute(mApps.toArray(new App[]{}));
+
     }
 
     private void initLoader() {

@@ -69,7 +69,7 @@ public class AppListAdapter extends BaseAdapter{
             // creates a ViewHolder and stores a reference to the children view we want to bind data to
             holder = new AppViewHolder();
 //            holder.mTitle = (TextView) convertView.findViewById(R.id.apptitle);
-//            holder.mIcon = (ImageView) convertView.findViewById(R.id.appicon);
+            holder.mIcon = (ImageView) convertView.findViewById(R.id.appicon);
             holder.mCheckbox = (CheckedTextView) convertView.findViewById(android.R.id.text1);
             convertView.setTag(holder);
         } else {
@@ -84,11 +84,11 @@ public class AppListAdapter extends BaseAdapter{
         holder.mCheckbox.setChecked(app.getIsSelected());
 //        }
 
-//        if (mIcons == null || mIcons.get(app.getPackageName()) == null) {
-//            holder.setIcon(mStdImg);
-//        } else {
-//            holder.setIcon(mIcons.get(app.getPackageName()));
-//        }
+        if (mIcons == null || mIcons.get(app.getPackageName()) == null) {
+            holder.setIcon(mStdImg);
+        } else {
+            holder.setIcon(mIcons.get(app.getPackageName()));
+        }
 
         return convertView;
     }
@@ -121,7 +121,7 @@ public class AppListAdapter extends BaseAdapter{
     public class AppViewHolder {
 
 //        private TextView mTitle;
-//        private ImageView mIcon;
+        private ImageView mIcon;
         private CheckedTextView mCheckbox;
 
         /**
@@ -138,10 +138,10 @@ public class AppListAdapter extends BaseAdapter{
          *
          * @param img the icon drawable to be displayed
          */
-//        public void setIcon(Drawable img) {
-//            if (img != null) {
-//                mIcon.setImageDrawable(img);
-//            }
-//        }
+        public void setIcon(Drawable img) {
+            if (img != null) {
+                mIcon.setImageDrawable(img);
+            }
+        }
     }
 }
