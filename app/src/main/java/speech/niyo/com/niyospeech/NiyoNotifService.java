@@ -2,6 +2,7 @@ package speech.niyo.com.niyospeech;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -19,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import speech.niyo.com.niyospeech.speakers.DefaultNiyoSpeaker;
 import speech.niyo.com.niyospeech.speakers.GmailSpekaer;
@@ -29,16 +32,24 @@ import speech.niyo.com.niyospeech.speakers.HangoutNiyoSpeaker;
  */
 public class NiyoNotifService extends NotificationListenerService implements TextToSpeech.OnInitListener, AudioManager.OnAudioFocusChangeListener {
     public static final String LOG_TAG = NiyoNotifService.class.getSimpleName();
-    private TextToSpeech _tts;
+    private TextToSpeech _defaultTts;
+    private TextToSpeech _englishTts;
 
     private HashMap<String, NiyoSpeaker> _speakers;
     private List<String> _blackList;
+    private Pattern _p = Pattern.compile("\\p{InHebrew}");
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        _tts = new TextToSpeech(this, this);
+        _defaultTts = new TextToSpeech(this, this);
+        _englishTts = new TextToSpeech(this, this, "com.google.android.tts");
+        List<TextToSpeech.EngineInfo> engines = _defaultTts.getEngines();
+
+        for (TextToSpeech.EngineInfo engine: engines) {
+            Log.d(LOG_TAG, "engine name is "+engine.name+" label is "+engine.label);
+        }
         _speakers = new HashMap<String, NiyoSpeaker>();
         _speakers.put("com.google.android.talk", new HangoutNiyoSpeaker());
 
@@ -106,6 +117,12 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
         String textToSpeak = speaker.resolveText(notif);
 
+        TextToSpeech chosenTTS = _defaultTts;
+
+        if (isHebrewInText(textToSpeak)) {
+            chosenTTS = _englishTts;
+        }
+
         Log.d(LOG_TAG, "ok, going to speak "+textToSpeak+" for pkg "+pkg);
 
         if (!isEnabled) return;
@@ -117,7 +134,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 final AudioManager.OnAudioFocusChangeListener listener = this;
-                _tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                chosenTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
                     public void onStart(String s) {
 
@@ -140,11 +157,31 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
-                speaker.speak(textToSpeak.toString(), _tts, params);
+                speaker.speak(textToSpeak, chosenTTS, params);
 
             }
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        _defaultTts.shutdown();
+        _englishTts.shutdown();
+    }
+
+    private boolean isHebrewInText(String textToSpeak) {
+
+        Matcher m = _p.matcher(textToSpeak);
+
+        if (m.find()) {
+            Log.d(LOG_TAG, "****************the text has hebrew letters");
+            return true;
+        }
+        else {
+            Log.d(LOG_TAG, "*****************test has no hebrew");
+            return false;
+        }
     }
 
     private String printSet(Set<String> set) {
