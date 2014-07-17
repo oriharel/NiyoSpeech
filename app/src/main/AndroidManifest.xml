@@ -37,6 +37,16 @@
             android:enabled="true"
             android:exported="true" >
         </provider>
+
+        <receiver
+            android:name=".WifiReciever"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.ACCESS_NETWORK_STATE">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
