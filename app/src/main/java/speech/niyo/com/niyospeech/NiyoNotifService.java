@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import speech.niyo.com.niyospeech.speakers.DefaultNiyoSpeaker;
+import speech.niyo.com.niyospeech.speakers.GmailSpekaer;
 import speech.niyo.com.niyospeech.speakers.HangoutNiyoSpeaker;
 
 /**
@@ -42,7 +43,9 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         _speakers.put("com.google.android.talk", new HangoutNiyoSpeaker());
 
         //Gmail
-        _speakers.put("com.google.android.gm", new DefaultNiyoSpeaker());
+        _speakers.put("com.google.android.gm", new GmailSpekaer());
+
+        //Whatsup
         _speakers.put("com.whatsapp", new DefaultNiyoSpeaker());
 
         _blackList = new ArrayList<String>();

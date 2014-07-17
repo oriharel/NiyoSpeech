@@ -11,11 +11,7 @@ import speech.niyo.com.niyospeech.NiyoSpeaker;
 /**
  * Created by oriharel on 7/12/14.
  */
-public class HangoutNiyoSpeaker implements NiyoSpeaker {
-    @Override
-    public void speak(String text, TextToSpeech tts, HashMap<String, String> params) {
-        tts.speak(text.toString(), TextToSpeech.QUEUE_ADD, params);
-    }
+public class HangoutNiyoSpeaker extends NiyoSpeaker {
 
     @Override
     public String resolveText(Notification notif) {
