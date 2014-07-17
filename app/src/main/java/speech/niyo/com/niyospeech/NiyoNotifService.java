@@ -76,7 +76,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         Boolean isEnabled = sharedPref.getBoolean("example_checkbox", false);
 
 
-        if (!isEnabled) return;
+
 
         String select = "((" + AppsColumns.APP_PKG + " NOTNULL) AND ("
                 + AppsColumns.APP_PKG + " != '' ))";
@@ -106,7 +106,9 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
         String textToSpeak = speaker.resolveText(notif);
 
-        Log.d(LOG_TAG, "ok, going to speak "+pkg);
+        Log.d(LOG_TAG, "ok, going to speak "+textToSpeak+" for pkg "+pkg);
+
+        if (!isEnabled) return;
 
         if (textToSpeak != null) {
             final AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
