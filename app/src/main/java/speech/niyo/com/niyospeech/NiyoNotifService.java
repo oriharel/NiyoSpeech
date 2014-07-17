@@ -1,11 +1,13 @@
 package speech.niyo.com.niyospeech;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.service.notification.NotificationListenerService;
@@ -78,11 +80,9 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         Log.d(LOG_TAG, "received new notification");
         Notification notif = sbn.getNotification();
         String pkg = sbn.getPackageName();
-        CharSequence text = notif.tickerText;
-        Bundle bundle = notif.extras;
-        Object contentText = bundle.get(Notification.EXTRA_TEXT);
-        Log.d(LOG_TAG, "text received with "+text+" pkg is "+pkg);
-        Log.d(LOG_TAG, "contentText received with "+contentText+" pkg is "+pkg);
+
+        logNotif(notif, pkg);
+
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean isEnabled = sharedPref.getBoolean("example_checkbox", false);
 
@@ -103,8 +103,8 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
             cursor.moveToNext();
         }
 
-        selecteds.add("com.google.android.talk");
-        selecteds.add("com.google.android.gm");
+//        selecteds.add("com.google.android.talk");
+//        selecteds.add("com.google.android.gm");
 
         if (!selecteds.contains(pkg)) return;
 
@@ -119,7 +119,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
         TextToSpeech chosenTTS = _defaultTts;
 
-        if (isHebrewInText(textToSpeak)) {
+        if (!isHebrewInText(textToSpeak)) {
             chosenTTS = _englishTts;
         }
 
@@ -162,6 +162,15 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
             }
         }
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void logNotif(Notification notif, String pkg) {
+        CharSequence text = notif.tickerText;
+        Bundle bundle = notif.extras;
+        Object contentText = bundle.get(Notification.EXTRA_TEXT);
+        Log.d(LOG_TAG, "text received with "+text+" pkg is "+pkg);
+        Log.d(LOG_TAG, "contentText received with "+contentText+" pkg is "+pkg);
     }
 
     @Override

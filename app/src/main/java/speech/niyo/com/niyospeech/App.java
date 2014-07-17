@@ -1,5 +1,7 @@
 package speech.niyo.com.niyospeech;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by oriharel on 7/13/14.
  */
@@ -10,6 +12,7 @@ public class App {
     private int _versionCode;
     private String _description;
     private Boolean isSelected = false;
+    private Drawable _icon;
 
     public String getTitle() {
         return _title;
@@ -74,5 +77,25 @@ public class App {
     @Override
     public String toString() {
         return this._title;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+
+        if (other instanceof App) {
+            return this._packageName.equals(((App)other).getPackageName());
+        }
+        else {
+            return this._packageName.equals(other.toString());
+        }
+
+    }
+
+    public Drawable getIcon() {
+        return this._icon;
+    }
+
+    public void setIcon(Drawable icon) {
+        this._icon = icon;
     }
 }

@@ -84,6 +84,9 @@ public class AppListAdapter extends BaseAdapter{
         holder.mCheckbox.setChecked(app.getIsSelected());
 //        }
 
+        if (app.getIcon() != null) {
+            holder.setIcon(app.getIcon());
+        }
         if (mIcons == null || mIcons.get(app.getPackageName()) == null) {
             holder.setIcon(mStdImg);
         } else {

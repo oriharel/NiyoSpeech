@@ -182,6 +182,21 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
             app.setDescription(description != null ? description.toString() : "");
             apps.add(app);
         }
+        if (!apps.contains("com.google.android.gm")) {
+            App gmailApp = new App();
+            gmailApp.setTitle("Gmail");
+            gmailApp.setPackageName("com.google.android.gm");
+            gmailApp.setIcon(getResources().getDrawable(R.drawable.gmail_icon));
+            apps.add(gmailApp);
+        }
+
+        if (!apps.contains("com.google.android.talk")) {
+            App hangouts = new App();
+            hangouts.setTitle("Hangouts");
+            hangouts.setPackageName("com.google.android.talk");
+            hangouts.setIcon(getResources().getDrawable(R.drawable.hangouts_icon));
+            apps.add(hangouts);
+        }
         return apps;
     }
 

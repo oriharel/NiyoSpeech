@@ -5,8 +5,8 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
-    <!--<item android:id="@+id/action_done"-->
-        <!--android:icon="@drawable/ic_action_accept"-->
-        <!--android:title="@string/action_done"-->
-        <!--android:showAsAction="ifRoom" />-->
+    <item android:id="@+id/action_done"
+        android:icon="@drawable/ic_action_accept"
+        android:title="@string/action_done"
+        android:showAsAction="ifRoom" />
 </menu>
