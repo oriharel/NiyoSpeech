@@ -43,7 +43,7 @@ public class NiyoSpeaker {
             result = contentText.toString();
         }
 
-        if (result == null) {
+        if (result == null && text != null) {
             Log.d(LOG_TAG, "contentText is null, returning text");
             result = text.toString();
         }

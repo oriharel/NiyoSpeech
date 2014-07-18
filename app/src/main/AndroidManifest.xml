@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="speech.niyo.com.niyospeech" >
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/speak"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -29,7 +32,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
-
         </activity>
 
         <provider
@@ -43,11 +45,26 @@
             android:name=".WifiReciever"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.ACCESS_NETWORK_STATE">
+            android:permission="android.permission.ACCESS_NETWORK_STATE" >
             <intent-filter>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".BTReciever"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+
+                <category android:name="com.niyo" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".AnnouncingService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

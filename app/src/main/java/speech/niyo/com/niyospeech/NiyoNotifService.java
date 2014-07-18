@@ -86,9 +86,6 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean isEnabled = sharedPref.getBoolean("example_checkbox", false);
 
-
-
-
         String select = "((" + AppsColumns.APP_PKG + " NOTNULL) AND ("
                 + AppsColumns.APP_PKG + " != '' ))";
         Cursor cursor = getContentResolver().query(NiyoSpeech.APPS_URI, NiyoSpeech.APPS_SUMMARY_PROJECTION,

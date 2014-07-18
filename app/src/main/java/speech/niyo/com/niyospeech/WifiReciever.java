@@ -17,7 +17,7 @@ public class WifiReciever extends BroadcastReceiver {
 
         int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
         String msg = null;
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         switch (state) {
             case WifiManager.WIFI_STATE_DISABLED:
