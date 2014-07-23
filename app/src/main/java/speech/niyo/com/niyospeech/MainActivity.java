@@ -29,6 +29,8 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -182,7 +184,12 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
             app.setDescription(description != null ? description.toString() : "");
             apps.add(app);
         }
-        if (!apps.contains("com.google.android.gm")) {
+
+        App tempApp = new App();
+        tempApp.setPackageName("com.google.android.gm");
+
+
+        if (!apps.contains(tempApp)) {
             App gmailApp = new App();
             gmailApp.setTitle("Gmail");
             gmailApp.setPackageName("com.google.android.gm");
@@ -190,14 +197,31 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
             apps.add(gmailApp);
         }
 
-        if (!apps.contains("com.google.android.talk")) {
+        tempApp.setPackageName("com.google.android.talk");
+
+        if (!apps.contains(tempApp)) {
             App hangouts = new App();
             hangouts.setTitle("Hangouts");
             hangouts.setPackageName("com.google.android.talk");
             hangouts.setIcon(getResources().getDrawable(R.drawable.hangouts_icon));
             apps.add(hangouts);
         }
-        return apps;
+        App[] toArray = new App[apps.size()];
+        apps.toArray(toArray);
+        Arrays.sort(toArray, new Comparator<Object>() {
+            @Override
+            public int compare(Object o, Object o2) {
+
+                if (o instanceof App && o2 instanceof App) {
+                    return ((App)o).getTitle().compareTo(((App)o2).getTitle());
+                }
+                else {
+                    return 0;
+                }
+
+            }
+        });
+        return Arrays.asList(toArray);
     }
 
     @Override

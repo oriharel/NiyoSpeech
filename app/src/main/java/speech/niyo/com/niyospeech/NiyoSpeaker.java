@@ -55,12 +55,15 @@ public class NiyoSpeaker {
             Log.d(LOG_TAG, "returning just the contextText");
         }
 
-        Pattern p = Pattern.compile("\\p{InHebrew}");
-        Matcher m = p.matcher(result);
+        if (result != null) {
+            Pattern p = Pattern.compile("\\p{InHebrew}");
+            Matcher m = p.matcher(result);
 
-        if (m.find()) {
-            Log.d(LOG_TAG, "the text has hebrew letters");
+            if (m.find()) {
+                Log.d(LOG_TAG, "the text has hebrew letters");
+            }
         }
+
 
         return result;
     }
