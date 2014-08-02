@@ -1,5 +1,7 @@
 package speech.niyo.com.niyospeech;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,36 +20,17 @@ public class WifiReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        //ignore if bluetooth is connected
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        int state = mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
 
+        if (state == BluetoothProfile.STATE_CONNECTED) {
+            Log.d(LOG_TAG, "Bluetooth before wifi...");
+            return;
+        }
 
         NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-//        NetworkInfo.State state = networkInfo.getState();
-//        String msg = null;
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-
-//        switch (state) {
-//            case WifiManager.WIFI_STATE_DISABLED:
-//                msg = "wifi is disabled";
-//                break;
-//            case WifiManager.WIFI_STATE_ENABLED:
-//                msg = "wifi is enabled";
-//                SharedPreferences.Editor editor = sharedPref.edit();
-//                editor.putBoolean("example_checkbox", false);
-//                editor.commit();
-//                break;
-//            case WifiManager.WIFI_STATE_DISABLING:
-//                msg = "wifi is switching off";
-//                break;
-//            case WifiManager.WIFI_STATE_ENABLING:
-//                msg = "wifi is getting enabled";
-//                break;
-//            default:
-//                msg = "not working properly";
-//                break;
-//        }
-//        if (msg != null) {
-//            Log.d("************%%%%%%%%wifi state ", "WIFI" + msg);
-//        }
 
         Log.d(LOG_TAG, "received wifi connection changed");
         Log.d(LOG_TAG, "with isInternetConnected(context): "+isInternetConnected(context));
