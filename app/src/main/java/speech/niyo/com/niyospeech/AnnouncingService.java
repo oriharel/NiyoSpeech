@@ -33,6 +33,7 @@ public class AnnouncingService extends IntentService {
     // TODO: Customize helper method
     public static void startActionAnnounce(Context context, String param1, String param2) {
         _defaultTts = new TextToSpeech(context, getInitListener(), "com.google.android.tts");
+
     }
 
     /**
@@ -58,7 +59,9 @@ public class AnnouncingService extends IntentService {
         return new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
-                _defaultTts.speak("NeeYo speech is on", TextToSpeech.QUEUE_ADD, null);
+//                _defaultTts.speak("שלום משפחת הראל", TextToSpeech.QUEUE_ADD, null);
+                _defaultTts.addSpeech("intro", "speech.niyo.com.niyospeech", R.raw.niyo);
+                _defaultTts.speak("intro", TextToSpeech.QUEUE_ADD, null);
             }
         };
     }
