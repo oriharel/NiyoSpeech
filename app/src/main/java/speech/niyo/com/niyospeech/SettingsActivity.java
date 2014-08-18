@@ -76,6 +76,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
+        if (id == R.id.action_geo) {
+            Intent intent = new Intent(this, GeoSpeechActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -111,6 +115,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             CheckBoxPreference connectionPref = (CheckBoxPreference)findPreference(key);
             // Set summary to be the user-description for the selected value
             connectionPref.setChecked(sharedPreferences.getBoolean(key, false));
+
+            Intent announceIntent = new Intent(this, AnnouncingService.class);
+            announceIntent.setAction(AnnouncingService.ACTION_ANNOUNCE);
+            this.startService(announceIntent);
         }
     }
 }

@@ -31,9 +31,9 @@ public class BTReciever extends BroadcastReceiver {
             editor.commit();
 //        }
 
-        Intent announceIntent = new Intent(context, AnnouncingService.class);
-        announceIntent.setAction(AnnouncingService.ACTION_ANNOUNCE);
-        context.startService(announceIntent);
+//        Intent announceIntent = new Intent(context, AnnouncingService.class);
+//        announceIntent.setAction(AnnouncingService.ACTION_ANNOUNCE);
+//        context.startService(announceIntent);
 
 
     }
