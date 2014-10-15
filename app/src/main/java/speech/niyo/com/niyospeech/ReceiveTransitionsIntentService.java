@@ -75,7 +75,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
                     editor.putBoolean("example_checkbox", false);
                 }
                 else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
-                    editor.putBoolean("example_checkbox", true);
+//                    editor.putBoolean("example_checkbox", true);
                 }
 
                 editor.commit();

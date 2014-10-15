@@ -60,8 +60,8 @@ public class AnnouncingService extends IntentService {
             @Override
             public void onInit(int i) {
 //                _defaultTts.speak("שלום משפחת הראל", TextToSpeech.QUEUE_ADD, null);
-                _defaultTts.addSpeech("intro", "speech.niyo.com.niyospeech", R.raw.niyo);
-                _defaultTts.speak("intro", TextToSpeech.QUEUE_ADD, null);
+//                _defaultTts.addSpeech("intro", "speech.niyo.com.niyospeech", R.raw.niyo);
+//                _defaultTts.speak("intro", TextToSpeech.QUEUE_ADD, null);
             }
         };
     }
