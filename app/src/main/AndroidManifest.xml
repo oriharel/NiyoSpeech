@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".SettingsActivity"
+            android:name="speech.niyo.com.niyospeech.SettingsActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".NiyoNotifService"
+            android:name="speech.niyo.com.niyospeech.NiyoNotifService"
             android:label="@string/service_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>
@@ -34,19 +34,19 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name="speech.niyo.com.niyospeech.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
 
         <provider
-            android:name=".SpeechProvider"
+            android:name="speech.niyo.com.niyospeech.SpeechProvider"
             android:authorities="com.niyo.speech.provider"
             android:enabled="true"
             android:exported="true" >
         </provider>
 
         <receiver
-            android:name=".WifiReciever"
+            android:name="speech.niyo.com.niyospeech.WifiReciever"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -54,7 +54,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".BTReciever"
+            android:name="speech.niyo.com.niyospeech.BTReciever"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -65,7 +65,7 @@
         </receiver>
 
         <service
-            android:name=".AnnouncingService"
+            android:name="speech.niyo.com.niyospeech.AnnouncingService"
             android:exported="false" >
         </service>
 
@@ -74,14 +74,24 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".GeoSpeechActivity"
+            android:name="speech.niyo.com.niyospeech.GeoSpeechActivity"
             android:label="@string/title_activity_geo_speech" >
         </activity>
 
         <service
-            android:name=".ReceiveTransitionsIntentService"
+            android:name="speech.niyo.com.niyospeech.ReceiveTransitionsIntentService"
             android:exported="false" >
         </service>
+        <service
+            android:name="speech.niyo.com.niyospeech.ShutUpService"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name="speech.niyo.com.niyospeech.ShutUpReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
     </application>
 
 </manifest>

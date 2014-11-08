@@ -2,6 +2,8 @@ package speech.niyo.com.niyospeech;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,10 +35,13 @@ import speech.niyo.com.niyospeech.speakers.HangoutNiyoSpeaker;
 /**
  * Created by oriharel on 7/11/14.
  */
-public class NiyoNotifService extends NotificationListenerService implements TextToSpeech.OnInitListener, AudioManager.OnAudioFocusChangeListener {
+public class NiyoNotifService extends NotificationListenerService implements TextToSpeech.OnInitListener,
+        AudioManager.OnAudioFocusChangeListener,
+        SharedPreferences.OnSharedPreferenceChangeListener{
     public static final String LOG_TAG = NiyoNotifService.class.getSimpleName();
     private TextToSpeech _defaultTts;
     private TextToSpeech _englishTts;
+    private TextToSpeech _chosenTts;
 
     private HashMap<String, NiyoSpeaker> _speakers;
     private List<String> _blackList;
@@ -68,9 +74,12 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         _blackList.add("com.google.android.googlequicksearchbox");
         _blackList.add("com.android.providers.downloads");
 
-        SharedPreferences prefs = this.getSharedPreferences(AppListAdapter.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-
-        Set<String> set = prefs.getStringSet(AppListAdapter.APPS_TO_SPEECH, new HashSet<String>());
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        Set<String> set = sharedPref.getStringSet(AppListAdapter.APPS_TO_SPEECH, new HashSet<String>());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("shutup", false);
+        editor.commit();
 
         Log.d(LOG_TAG, "set contains ("+set.size()+") "+printSet(set));
 
@@ -114,13 +123,13 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
         String textToSpeak = speaker.resolveText(notif);
 
-        TextToSpeech chosenTTS = _defaultTts;
+        _chosenTts = _defaultTts;
 
         if (!isHebrewInText(textToSpeak)) {
-            chosenTTS = _englishTts;
+            _chosenTts = _englishTts;
         }
 
-        Log.d(LOG_TAG, "ok, going to speak "+textToSpeak+" for pkg "+pkg);
+        Log.d(LOG_TAG, "ok, going to speak "+textToSpeak+" for pkg "+pkg+" with tts: "+_chosenTts.toString());
 
         if (!isEnabled) return;
 
@@ -131,7 +140,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 final AudioManager.OnAudioFocusChangeListener listener = this;
-                chosenTTS.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                _chosenTts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                     @Override
                     public void onStart(String s) {
 
@@ -141,6 +150,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
                     public void onDone(String s) {
                         if (s.equals(id.toString())) {
                             am.abandonAudioFocus(listener);
+                            removeSpeakingNotification();
                         }
                     }
 
@@ -154,11 +164,37 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
-                speaker.speak(textToSpeak, chosenTTS, params);
+                params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_DTMF));
+                speaker.speak(textToSpeak, _chosenTts, params);
+                showSpeakingNotification();
 
             }
         }
 
+    }
+
+    public void shutUp() {
+
+    }
+
+    private void showSpeakingNotification() {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.speak)
+                .setContentTitle("NIYO is speaking!");
+
+        Intent shutUpintent = new Intent(this, ShutUpReceiver.class);
+
+        PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, shutUpintent, 0);
+
+        mBuilder.addAction(R.drawable.ic_action_cancel, "Shut Up!", contentIntent);
+        NotificationManager mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
+    }
+
+    private void removeSpeakingNotification() {
+        NotificationManager mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(1);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -227,5 +263,23 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
     @Override
     public void onAudioFocusChange(int i) {
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        Log.d(LOG_TAG, "onSharedPreferenceChanged received with "+key);
+        if (key.equals("shutup")) {
+            Log.d(LOG_TAG, "onSharedPreferenceChanged being told to shut up");
+            if (sharedPreferences.getBoolean(key, false)) {
+                _chosenTts.stop();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("shutup", false);
+                editor.apply();
+            }
+        }
+        else {
+            Log.d(LOG_TAG, "called with not shutup");
+        }
     }
 }
