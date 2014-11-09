@@ -74,18 +74,6 @@ public class MainActivity extends ListActivity implements AdapterView.OnItemClic
         getLoaderManager().initLoader(0, null, mLoader);
         mAppsList.setSelection(0);
 
-//        String test = "שלום לך and now with english";
-//
-//        Pattern p = Pattern.compile("\\p{InHebrew}");
-//        Matcher m = p.matcher(test);
-//
-//        if (m.find()) {
-//            Log.d(LOG_TAG, "****************the text has hebrew letters");
-//        }
-//        else {
-//            Log.d(LOG_TAG, "*****************test has no hebrew");
-//        }
-
         new LoadIconsTask().execute(mApps.toArray(new App[]{}));
 
     }

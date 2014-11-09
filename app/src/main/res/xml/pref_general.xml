@@ -6,4 +6,16 @@
         android:summary="@string/pref_description_niyo_speech"
         android:defaultValue="true" />
 
+    <CheckBoxPreference
+        android:key="bt_detect"
+        android:title="@string/pref_title_bt_detect"
+        android:summary="@string/pref_description_bt_detect"
+        android:defaultValue="true" />
+
+    <CheckBoxPreference
+        android:key="wifi_detect"
+        android:title="@string/pref_title_wifi_detect"
+        android:summary="@string/pref_description_wifi_detect"
+        android:defaultValue="true" />
+
 </PreferenceScreen>

@@ -10,5 +10,8 @@
     <string name="title_activity_google_play_services">Home and Work</string>
     <string name="action_place">Geofence</string>
     <string name="title_activity_geo_speech">Home and Work</string>
+    <string name="welcome_msg">Welcome to NIYO Speech! This app will speak out notifications from your selected apps</string>
+    <string name="tts_title">Text To Speech Engine in use:</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
 
 </resources>

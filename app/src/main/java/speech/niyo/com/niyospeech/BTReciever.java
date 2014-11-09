@@ -24,16 +24,14 @@ public class BTReciever extends BroadcastReceiver {
 
         Log.d(LOG_TAG, "received bluetooth event with " + device.getName());
 
-//        if (connectionState == BluetoothAdapter.STATE_CONNECTED) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if (sharedPref.getBoolean("bt_detect", true)) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("example_checkbox", true);
             editor.commit();
-//        }
+        }
 
-//        Intent announceIntent = new Intent(context, AnnouncingService.class);
-//        announceIntent.setAction(AnnouncingService.ACTION_ANNOUNCE);
-//        context.startService(announceIntent);
 
 
     }

@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="speech.niyo.com.niyospeech.SettingsActivity"
+            android:name="speech.niyo.com.niyospeech.WelcomeActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +35,11 @@
 
         <activity
             android:name="speech.niyo.com.niyospeech.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+
+        <activity
+            android:name="speech.niyo.com.niyospeech.SettingsActivity"
             android:label="@string/title_activity_main" >
         </activity>
 
@@ -82,16 +87,13 @@
             android:name="speech.niyo.com.niyospeech.ReceiveTransitionsIntentService"
             android:exported="false" >
         </service>
-        <service
-            android:name="speech.niyo.com.niyospeech.ShutUpService"
-            android:exported="false" >
-        </service>
 
         <receiver
             android:name="speech.niyo.com.niyospeech.ShutUpReceiver"
             android:enabled="true"
             android:exported="true" >
         </receiver>
+
     </application>
 
 </manifest>

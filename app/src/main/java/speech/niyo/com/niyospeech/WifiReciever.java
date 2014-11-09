@@ -23,14 +23,17 @@ public class WifiReciever extends BroadcastReceiver {
         //ignore if bluetooth is connected
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         int state = mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         if (state == BluetoothProfile.STATE_CONNECTED) {
             Log.d(LOG_TAG, "Bluetooth before wifi...");
             return;
         }
 
+        if (!sharedPref.getBoolean("wifi_detect", true)) return;
+
         NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+
 
         Log.d(LOG_TAG, "received wifi connection changed");
         Log.d(LOG_TAG, "with isInternetConnected(context): "+isInternetConnected(context));
