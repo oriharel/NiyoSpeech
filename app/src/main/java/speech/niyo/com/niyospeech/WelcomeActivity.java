@@ -1,11 +1,15 @@
 package speech.niyo.com.niyospeech;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -15,47 +19,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class WelcomeActivity extends Activity implements TextToSpeech.OnInitListener{
+public class WelcomeActivity extends Activity implements NiyoInteraction {
 
-    private TextToSpeech _defaultTts;
+
     public static final String LOG_TAG = WelcomeActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
-        _defaultTts = new TextToSpeech(this, this);
-        String ttsPkg = _defaultTts.getDefaultEngine();
-
-        PackageManager packageManager = getPackageManager();
-        try {
-            ApplicationInfo engineInfo = packageManager.getApplicationInfo(ttsPkg, PackageManager.GET_META_DATA);
-            CharSequence engineLabel = packageManager.getApplicationLabel(engineInfo);
-            Drawable appIcon = packageManager.getApplicationIcon(engineInfo);
-
-            ImageView ttsImage = (ImageView)findViewById(R.id.tts_icon);
-            TextView ttsLabel = (TextView)findViewById(R.id.tts_name);
-
-            ttsImage.setImageDrawable(appIcon);
-            ttsLabel.setText(engineLabel);
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sharedPref.getBoolean("example_checkbox", false)){
-//            findViewById(R.id)
-        }
-
-
+        setContentView(R.layout.container);
+        WelcomeFragment firstFragment = new WelcomeFragment();
+        firstFragment.setArguments(getIntent().getExtras());
+        getFragmentManager().beginTransaction().add(R.id.fragment_container, firstFragment).commit();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_welcome, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -70,12 +52,24 @@ public class WelcomeActivity extends Activity implements TextToSpeech.OnInitList
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_done) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            Fragment fragment = new ItemFragment();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+        if (id == R.id.action_geo) {
+            Intent intent = new Intent(this, GeoSpeechActivity.class);
+            startActivity(intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onInit(int i) {
+    public void onFragmentInteraction(String id) {
 
     }
+
 }

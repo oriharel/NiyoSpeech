@@ -13,5 +13,6 @@
     <string name="welcome_msg">Welcome to NIYO Speech! This app will speak out notifications from your selected apps</string>
     <string name="tts_title">Text To Speech Engine in use:</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

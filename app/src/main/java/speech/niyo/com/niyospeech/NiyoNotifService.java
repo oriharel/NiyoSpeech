@@ -164,7 +164,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
-                params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_DTMF));
+                params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_SYSTEM));
                 speaker.speak(textToSpeak, _chosenTts, params);
                 showSpeakingNotification();
 
