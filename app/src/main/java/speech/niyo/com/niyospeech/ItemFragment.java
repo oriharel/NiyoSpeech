@@ -2,6 +2,7 @@ package speech.niyo.com.niyospeech;
 
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.content.pm.ApplicationInfo;
@@ -263,11 +264,24 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
 
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+        Log.d(LOG_TAG, "clicked!!!");
+//        ((CheckedTextView)adapterView.findViewById(android.R.id.text1)).setChecked(true);
+        Log.d(LOG_TAG, "position: "+adapterView.getItemAtPosition(i));
+        mApps.get(i).setIsSelected(!mApps.get(i).getIsSelected());
+        mAdapter.notifyDataSetChanged();
+
+
+
+        if (mApps.get(i).getIsSelected()) {
+            ContentValues values = new ContentValues();
+            values.put(AppsColumns.APP_PKG, mApps.get(i).getPackageName());
+            Uri insertResult = getActivity().getContentResolver().insert(NiyoSpeech.APPS_URI, values);
+        }
+        else {
+            String select = "((" + AppsColumns.APP_PKG + " NOTNULL) AND ("
+                    + AppsColumns.APP_PKG + " = '"+mApps.get(i).getPackageName()+"' ))";
+            int delResult = getActivity().getContentResolver().delete(NiyoSpeech.APPS_URI, select, null);
         }
     }
 
