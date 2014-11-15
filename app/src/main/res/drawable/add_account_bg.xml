@@ -1,0 +1,11 @@
+<shape
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <solid
+    android:color="@color/appColor"/>
+    <stroke android:width="1.5dip" android:color="@color/mainColor"/>
+    <item android:left="1.5dp" android:right="1.5dp"
+        android:drawable="@drawable/middle_item_selector_background">
+    </item>
+    
+
+</shape>
