@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ import android.widget.TextView;
  * Use the {@link WelcomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitListener{
+public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitListener, SharedPreferences.OnSharedPreferenceChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -101,17 +102,52 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
             e.printStackTrace();
         }
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (sharedPref.getBoolean("example_checkbox", false)){
-//            findViewById(R.id)
-        }
-
-        TextView welcome = (TextView)layout.findViewById(R.id.welcome);
-        Typeface roboto_font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
-//        welcome.setTypeface(roboto_font);
-
+        Button enable = (Button)layout.findViewById(R.id.enable);
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        enable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean enabled = sharedPref.getBoolean("example_checkbox", false);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("example_checkbox", !enabled);
+                editor.commit();
+            }
+        });
 
         return layout;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        _defaultTts.shutdown();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Boolean enabled = sharedPref.getBoolean("example_checkbox", false);
+        setEnableButton(enabled);
+
+    }
+
+    private void setEnableButton(Boolean enabled) {
+        if (getView() != null) {
+            Button enableButton = (Button)getView().findViewById(R.id.enable);
+            if (!enabled){
+                enableButton.setBackground(getResources().getDrawable(R.drawable.add_account_bg));
+                enableButton.setTextColor(getResources().getColor(R.color.mainColor));
+                enableButton.setText("Activate Speech");
+            }
+            else {
+                enableButton.setBackgroundColor(getResources().getColor(R.color.mainColor));
+                enableButton.setTextColor(getResources().getColor(R.color.appColor));
+                enableButton.setText("Deactivate Speech");
+            }
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -143,4 +179,10 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("example_checkbox")) {
+            setEnableButton(sharedPreferences.getBoolean(key, false));
+        }
+    }
 }

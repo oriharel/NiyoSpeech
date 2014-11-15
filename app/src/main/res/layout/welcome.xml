@@ -72,7 +72,8 @@
             android:id="@+id/enable"
             android:layout_row="1"
             android:layout_column="2"
-            android:layout_rowSpan="1" />
+            android:layout_rowSpan="1"
+             />
 
         <Button
             style="@style/NiyoButton"
