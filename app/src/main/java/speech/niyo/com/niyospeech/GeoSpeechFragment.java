@@ -3,6 +3,7 @@ package speech.niyo.com.niyospeech;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +11,11 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -26,7 +30,7 @@ import java.util.List;
 import speech.niyo.com.niyospeech.speakers.SimpleGeofence;
 
 
-public class GeoSpeechActivity extends Activity implements
+public class GeoSpeechFragment extends Fragment implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationClient.OnAddGeofencesResultListener {
@@ -35,7 +39,7 @@ public class GeoSpeechActivity extends Activity implements
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
      */
-    private final static int
+    public final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     @Override
@@ -94,7 +98,7 @@ public class GeoSpeechActivity extends Activity implements
         if (connectionResult.hasResolution()) {
             try {
                 connectionResult.startResolutionForResult(
-                        this,
+                        getActivity(),
                         CONNECTION_FAILURE_RESOLUTION_REQUEST);
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
@@ -107,7 +111,7 @@ public class GeoSpeechActivity extends Activity implements
             // Get the error dialog from Google Play services
             Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
                     errorCode,
-                    this,
+                    getActivity(),
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
             // If Google Play services can provide an error dialog
             if (errorDialog != null) {
@@ -160,25 +164,7 @@ public class GeoSpeechActivity extends Activity implements
      * Handle results returned to the FragmentActivity
      * by Google Play services
      */
-    @Override
-    protected void onActivityResult(
-            int requestCode, int resultCode, Intent data) {
-        // Decide what to do based on the original request code
-        switch (requestCode) {
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST :
-            /*
-             * If the result code is Activity.RESULT_OK, try
-             * to connect again
-             */
-                switch (resultCode) {
-                    case Activity.RESULT_OK :
-                    /*
-                     * Try the request again
-                     */
-                        break;
-                }
-        }
-    }
+
 
     /*
      * Create a PendingIntent that triggers an IntentService in your
@@ -186,13 +172,13 @@ public class GeoSpeechActivity extends Activity implements
      */
     private PendingIntent getTransitionPendingIntent() {
         // Create an explicit Intent
-        Intent intent = new Intent(this,
+        Intent intent = new Intent(getActivity(),
                 ReceiveTransitionsIntentService.class);
         /*
          * Return the PendingIntent
          */
         return PendingIntent.getService(
-                this,
+                getActivity(),
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -234,21 +220,27 @@ public class GeoSpeechActivity extends Activity implements
     private boolean mInProgress;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_geo_speech);
 
         // Start with the request flag set to false
         mInProgress = false;
 
 
         // Instantiate a new geofence storage area
-        mGeofenceStorage = new SimpleGeofenceStore(this);
+        mGeofenceStorage = new SimpleGeofenceStore(getActivity());
 
         // Instantiate the current List of geofences
         mGeofenceList = new ArrayList<Geofence>();
         createGeofences();
         addGeofences();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View layout = inflater.inflate(R.layout.activity_geo_speech, container, false);
+        return layout;
     }
 
     public void addGeofences() {
@@ -268,7 +260,7 @@ public class GeoSpeechActivity extends Activity implements
          * OnConnectionFailedListener, pass the current activity object
          * as the listener for both parameters
          */
-        mLocationClient = new LocationClient(this, this, this);
+        mLocationClient = new LocationClient(getActivity(), this, this);
         // If a request is not already underway
         if (!mInProgress) {
             // Indicate that a request is underway
@@ -326,7 +318,7 @@ public class GeoSpeechActivity extends Activity implements
         // Check that Google Play services is available
         int resultCode =
                 GooglePlayServicesUtil.
-                        isGooglePlayServicesAvailable(this);
+                        isGooglePlayServicesAvailable(getActivity());
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
@@ -339,7 +331,7 @@ public class GeoSpeechActivity extends Activity implements
             // Get the error dialog from Google Play services
             Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
                     resultCode,
-                    this,
+                    getActivity(),
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             // If Google Play services can provide an error dialog
@@ -357,28 +349,4 @@ public class GeoSpeechActivity extends Activity implements
             return false;
         }
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.geo_speech, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-
 }

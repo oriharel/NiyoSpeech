@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -26,7 +29,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import speech.niyo.com.niyospeech.dummy.DummyContent;
 
@@ -116,6 +121,9 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         initLoader();
 
         getLoaderManager().initLoader(0, null, mLoader);
+        mListView.setSelection(0);
+
+        new LoadIconsTask().execute(mApps.toArray(new App[]{}));
 
         return view;
     }
@@ -299,15 +307,38 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * An asynchronous task to load the icons of the installed applications.
      */
+    private class LoadIconsTask extends AsyncTask<App, Void, Void> {
+        @Override
+        protected Void doInBackground(App... apps) {
+
+            Map<String, Drawable> icons = new HashMap<String, Drawable>();
+            PackageManager manager = getActivity().getApplicationContext().getPackageManager();
+
+            for (App app : apps) {
+                String pkgName = app.getPackageName();
+                Drawable ico = null;
+                try {
+                    Intent i = manager.getLaunchIntentForPackage(pkgName);
+                    if (i != null) {
+                        ico = manager.getActivityIcon(i);
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    Log.e("ERROR", "Unable to find icon for package '" + pkgName + "': " + e.getMessage());
+                }
+                icons.put(app.getPackageName(), ico);
+            }
+            mAdapter.setIcons(icons);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
 
 
 }

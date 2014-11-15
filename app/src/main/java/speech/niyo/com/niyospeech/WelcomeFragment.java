@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -104,6 +105,10 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
         if (sharedPref.getBoolean("example_checkbox", false)){
 //            findViewById(R.id)
         }
+
+        TextView welcome = (TextView)layout.findViewById(R.id.welcome);
+        Typeface roboto_font = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
+//        welcome.setTypeface(roboto_font);
 
 
         return layout;

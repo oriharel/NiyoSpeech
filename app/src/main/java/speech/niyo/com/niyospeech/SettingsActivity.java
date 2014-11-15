@@ -5,20 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -42,6 +32,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        
 
     }
 
@@ -65,7 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+//        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -77,7 +68,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             startActivity(intent);
         }
         if (id == R.id.action_geo) {
-            Intent intent = new Intent(this, GeoSpeechActivity.class);
+            Intent intent = new Intent(this, GeoSpeechFragment.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

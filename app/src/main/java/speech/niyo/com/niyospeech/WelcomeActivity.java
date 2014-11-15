@@ -4,19 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 
 public class WelcomeActivity extends Activity implements NiyoInteraction {
@@ -42,27 +32,55 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
     }
 
     @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        // Decide what to do based on the original request code
+        switch (requestCode) {
+            case GeoSpeechFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST :
+            /*
+             * If the result code is Activity.RESULT_OK, try
+             * to connect again
+             */
+                switch (resultCode) {
+                    case Activity.RESULT_OK :
+                    /*
+                     * Try the request again
+                     */
+                        break;
+                }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Fragment fragment = null;
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.action_done) {
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            Fragment fragment = new ItemFragment();
+
+            fragment = new ItemFragment();
+
+        }
+        if (id == R.id.action_geo) {
+            fragment = new GeoSpeechFragment();
+        }
+
+        if (fragment != null) {
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
-        if (id == R.id.action_geo) {
-            Intent intent = new Intent(this, GeoSpeechActivity.class);
-            startActivity(intent);
-        }
+
+
 
         return super.onOptionsItemSelected(item);
     }
