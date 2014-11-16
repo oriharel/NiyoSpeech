@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -164,7 +166,13 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
-                params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_SYSTEM));
+                BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                if (mBluetoothAdapter != null) {
+                    int state = mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
+                    if (state == BluetoothProfile.STATE_CONNECTED) {
+                        params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_RING));
+                    }
+                }
                 speaker.speak(textToSpeak, _chosenTts, params);
                 showSpeakingNotification();
 
