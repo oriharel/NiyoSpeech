@@ -115,6 +115,22 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
             }
         });
 
+        Button apps = (Button)layout.findViewById(R.id.apps);
+        apps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onButtonPressed(Uri.parse("welcome/apps"));
+            }
+        });
+
+        Button notif = (Button)layout.findViewById(R.id.approve);
+        notif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onButtonPressed(Uri.parse("welcome/notif"));
+            }
+        });
+
         return layout;
     }
 

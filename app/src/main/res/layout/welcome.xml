@@ -78,7 +78,7 @@
         <Button
             style="@style/NiyoButton"
             android:text="Approve"
-            android:id="@+id/button3"
+            android:id="@+id/approve"
             android:layout_row="1"
             android:layout_column="0"
             android:layout_rowSpan="1"
@@ -88,7 +88,7 @@
         <Button
             style="@style/NiyoButton"
             android:text="Select Apps"
-            android:id="@+id/button2"
+            android:id="@+id/apps"
             android:layout_row="1"
             android:layout_column="1"
             android:layout_rowSpan="1"
@@ -98,7 +98,7 @@
         <Button
             style="@style/NiyoButton"
             android:text="Change TTS"
-            android:id="@+id/button4"
+            android:id="@+id/tts"
             android:layout_marginTop="5dp"
             android:clickable="true" />
     </LinearLayout>

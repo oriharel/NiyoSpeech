@@ -63,10 +63,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_done) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
         if (id == R.id.action_geo) {
             Intent intent = new Intent(this, GeoSpeechFragment.class);
             startActivity(intent);

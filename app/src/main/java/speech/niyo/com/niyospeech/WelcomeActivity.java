@@ -65,11 +65,6 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
-        if (id == R.id.action_done) {
-
-            fragment = new ItemFragment();
-
-        }
         if (id == R.id.action_geo) {
             fragment = new GeoSpeechFragment();
         }
@@ -85,8 +80,23 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
         return super.onOptionsItemSelected(item);
     }
 
+    private void startAppsFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Fragment fragment = new ItemFragment();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     @Override
     public void onFragmentInteraction(String id) {
+
+        if (id.equals("welcome/apps")) {
+            startAppsFragment();
+        }
+        else if (id.equals("welcome/notif")) {
+            startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+        }
 
     }
 
