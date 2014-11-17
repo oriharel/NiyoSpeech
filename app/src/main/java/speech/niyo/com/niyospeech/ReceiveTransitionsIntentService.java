@@ -72,10 +72,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
 
                 if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                    editor.putBoolean("example_checkbox", false);
+                    editor.putBoolean("general_switch", false);
                 }
                 else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
-//                    editor.putBoolean("example_checkbox", true);
+//                    editor.putBoolean("general_switch", true);
                 }
 
                 editor.commit();

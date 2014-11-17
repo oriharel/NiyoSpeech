@@ -45,7 +45,7 @@ public class WifiReciever extends BroadcastReceiver {
         }
         if (isInternetConnected(context)) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("example_checkbox", false);
+            editor.putBoolean("general_switch", false);
             editor.commit();
         }
     }

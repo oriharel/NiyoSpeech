@@ -28,7 +28,7 @@ public class BTReciever extends BroadcastReceiver {
 
         if (sharedPref.getBoolean("bt_detect", true)) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("example_checkbox", true);
+            editor.putBoolean("general_switch", true);
             editor.commit();
         }
 

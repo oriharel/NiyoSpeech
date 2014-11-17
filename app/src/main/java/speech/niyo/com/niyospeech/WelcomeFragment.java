@@ -102,34 +102,6 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
             e.printStackTrace();
         }
 
-        Button enable = (Button)layout.findViewById(R.id.enable);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPref.registerOnSharedPreferenceChangeListener(this);
-        enable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Boolean enabled = sharedPref.getBoolean("example_checkbox", false);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean("example_checkbox", !enabled);
-                editor.commit();
-            }
-        });
-
-        Button apps = (Button)layout.findViewById(R.id.apps);
-        apps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onButtonPressed(Uri.parse("welcome/apps"));
-            }
-        });
-
-        Button notif = (Button)layout.findViewById(R.id.approve);
-        notif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onButtonPressed(Uri.parse("welcome/notif"));
-            }
-        });
 
         return layout;
     }
@@ -144,24 +116,13 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
     public void onResume() {
         super.onResume();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Boolean enabled = sharedPref.getBoolean("example_checkbox", false);
+        Boolean enabled = sharedPref.getBoolean("general_switch", false);
         setEnableButton(enabled);
 
     }
 
     private void setEnableButton(Boolean enabled) {
         if (getView() != null) {
-            Button enableButton = (Button)getView().findViewById(R.id.enable);
-            if (!enabled){
-                enableButton.setBackground(getResources().getDrawable(R.drawable.add_account_bg));
-                enableButton.setTextColor(getResources().getColor(R.color.mainColor));
-                enableButton.setText("Activate Speech");
-            }
-            else {
-                enableButton.setBackgroundColor(getResources().getColor(R.color.mainColor));
-                enableButton.setTextColor(getResources().getColor(R.color.appColor));
-                enableButton.setText("Deactivate Speech");
-            }
         }
 
     }
@@ -197,7 +158,7 @@ public class WelcomeFragment extends Fragment implements TextToSpeech.OnInitList
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("example_checkbox")) {
+        if (key.equals("general_switch")) {
             setEnableButton(sharedPreferences.getBoolean(key, false));
         }
     }

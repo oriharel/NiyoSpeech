@@ -95,7 +95,7 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         logNotif(notif, pkg);
 
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean isEnabled = sharedPref.getBoolean("example_checkbox", false);
+        Boolean isEnabled = sharedPref.getBoolean("general_switch", false);
 
         String select = "((" + AppsColumns.APP_PKG + " NOTNULL) AND ("
                 + AppsColumns.APP_PKG + " != '' ))";

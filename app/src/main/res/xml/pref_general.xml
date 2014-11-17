@@ -1,10 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
-        android:key="example_checkbox"
+        android:key="general_switch"
         android:title="@string/pref_title_niyo_speech"
         android:summary="@string/pref_description_niyo_speech"
         android:defaultValue="true" />
+    <Preference android:title="@string/select_apps">
+        <intent android:action="speech.niyo.com.niyospeech.MainActivity"/>
+    </Preference>
+    <Preference android:title="@string/approve_pref">
+        <intent android:action="android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"/>
+    </Preference>
+    <Preference android:title="Text to Speech Engine" android:summary="Aharon" android:key="tts_label">
+        <intent android:action="com.android.settings.TTS_SETTINGS"/>
+    </Preference>
 
     <CheckBoxPreference
         android:key="bt_detect"
@@ -12,10 +21,15 @@
         android:summary="@string/pref_description_bt_detect"
         android:defaultValue="true" />
 
-    <CheckBoxPreference
-        android:key="wifi_detect"
-        android:title="@string/pref_title_wifi_detect"
-        android:summary="@string/pref_description_wifi_detect"
-        android:defaultValue="true" />
+    <PreferenceCategory android:title="@string/wifi_pref_category">
+        <CheckBoxPreference
+            android:key="wifi_detect"
+            android:title="@string/pref_title_wifi_detect"
+            android:summary="@string/pref_description_wifi_detect"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+
+
 
 </PreferenceScreen>
