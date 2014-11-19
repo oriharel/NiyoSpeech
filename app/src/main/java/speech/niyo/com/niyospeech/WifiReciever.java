@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -43,7 +44,13 @@ public class WifiReciever extends BroadcastReceiver {
         if (networkInfo != null) {
             Log.d(LOG_TAG, "networkInfo is connected? "+networkInfo.isConnected());
         }
-        if (isInternetConnected(context)) {
+        String homeWifi = sharedPref.getString("wifi_home", context.getResources().getString(R.string.add_home_wifi));
+        String workWifi = sharedPref.getString("wifi_work", context.getResources().getString(R.string.add_work_wifi));
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+
+        if (isInternetConnected(context) &&
+                (connectionInfo.getSSID().equals(homeWifi) || connectionInfo.getSSID().equals(workWifi))) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("general_switch", false);
             editor.commit();

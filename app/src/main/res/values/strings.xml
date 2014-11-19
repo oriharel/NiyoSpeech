@@ -17,5 +17,9 @@
     <string name="wifi_pref_category">WiFi Setup</string>
     <string name="approve_pref">Approve For Notifications</string>
     <string name="select_apps">Select Apps to Listen</string>
+    <string name="wifi_home_title">Home WiFi</string>
+    <string name="add_home_wifi">Add your home WiFi here</string>
+    <string name="wifi_work_title">Work WiFi</string>
+    <string name="add_work_wifi">Add your work WiFi here</string>
 
 </resources>

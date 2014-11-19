@@ -27,6 +27,17 @@
             android:title="@string/pref_title_wifi_detect"
             android:summary="@string/pref_description_wifi_detect"
             android:defaultValue="true" />
+        <ListPreference
+            android:key="wifi_home"
+            android:title="@string/wifi_home_title"
+            android:summary="@string/add_home_wifi">
+        </ListPreference>
+
+        <ListPreference
+            android:key="wifi_work"
+            android:title="@string/wifi_work_title"
+            android:summary="@string/add_work_wifi">
+        </ListPreference>
     </PreferenceCategory>
 
 
