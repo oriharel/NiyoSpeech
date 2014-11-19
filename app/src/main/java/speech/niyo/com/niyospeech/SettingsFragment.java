@@ -87,11 +87,9 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals("general_switch")) {
             CheckBoxPreference connectionPref = (CheckBoxPreference)findPreference(key);
             // Set summary to be the user-description for the selected value
-            connectionPref.setChecked(sharedPreferences.getBoolean(key, false));
+            Boolean value = sharedPreferences.getBoolean(key, false);
+            connectionPref.setChecked(value);
 
-//            Intent announceIntent = new Intent(getActivity(), AnnouncingService.class);
-//            announceIntent.setAction(AnnouncingService.ACTION_ANNOUNCE);
-//            getActivity().startService(announceIntent);
         }
         else if (key.equals("wifi_home")) {
             Preference wifiHome = findPreference("wifi_home");

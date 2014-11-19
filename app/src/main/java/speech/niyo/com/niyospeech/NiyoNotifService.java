@@ -181,10 +181,6 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
 
     }
 
-    public void shutUp() {
-
-    }
-
     private void showSpeakingNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

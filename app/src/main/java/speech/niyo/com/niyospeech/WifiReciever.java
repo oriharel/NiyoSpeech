@@ -1,5 +1,7 @@
 package speech.niyo.com.niyospeech;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
@@ -11,6 +13,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class WifiReciever extends BroadcastReceiver {
@@ -44,17 +47,46 @@ public class WifiReciever extends BroadcastReceiver {
         if (networkInfo != null) {
             Log.d(LOG_TAG, "networkInfo is connected? "+networkInfo.isConnected());
         }
-        String homeWifi = sharedPref.getString("wifi_home", context.getResources().getString(R.string.add_home_wifi));
-        String workWifi = sharedPref.getString("wifi_work", context.getResources().getString(R.string.add_work_wifi));
-        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
-
         if (isInternetConnected(context) &&
-                (connectionInfo.getSSID().equals(homeWifi) || connectionInfo.getSSID().equals(workWifi))) {
+                (isAtHome(context, sharedPref) || isAtWork(context, sharedPref))) {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("general_switch", false);
             editor.commit();
+            showShutingdownNotification(context, sharedPref);
         }
+    }
+
+    private Boolean isAtHome(Context context, SharedPreferences sharedPref) {
+        String homeWifi = sharedPref.getString("wifi_home", context.getResources().getString(R.string.add_home_wifi));
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+        return connectionInfo.getSSID().equals(homeWifi);
+    }
+
+    private Boolean isAtWork(Context context, SharedPreferences sharedPref) {
+        String workWifi = sharedPref.getString("wifi_work", context.getResources().getString(R.string.add_work_wifi));
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+        return connectionInfo.getSSID().equals(workWifi);
+    }
+
+    private void showShutingdownNotification(Context context, SharedPreferences sharedPref) {
+        String message = "";
+        if (isAtHome(context, sharedPref)) {
+            message = "Welcome Home!";
+        }
+        else if (isAtWork(context, sharedPref)) {
+            message = "Have a great day!";
+        }
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context)
+                        .setSmallIcon(R.drawable.speak)
+                        .setContentTitle(message);
+
+
+        NotificationManager mNotificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(2, mBuilder.build());
     }
 
     public boolean isInternetConnected(Context context) {
