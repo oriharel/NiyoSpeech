@@ -23,5 +23,12 @@
     <string name="add_work_wifi">Add your work WiFi here</string>
     <string name="switch_on">Speech is ON!</string>
     <string name="switch_off">Speech is OFF!</string>
+    <string name="geo_pref_category">Geofencing Setup</string>
+    <string name="pref_description_geo_detect">Will automatically turn speech OFF when you get home or to work</string>
+    <string name="geo_home_title">Home Address</string>
+    <string name="add_home_geo">Add home address here</string>
+    <string name="wifi_geo_title">Work Address</string>
+    <string name="add_work_geo">Add your work address here</string>
+    <string name="pref_title_geo_detect">Geo Detect</string>
 
 </resources>
