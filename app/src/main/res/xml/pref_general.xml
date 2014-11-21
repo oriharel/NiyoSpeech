@@ -1,9 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
+    <SwitchPreference
         android:key="general_switch"
         android:title="@string/pref_title_niyo_speech"
         android:summary="@string/pref_description_niyo_speech"
+        android:switchTextOn = "YES"
+        android:switchTextOff = "NO"
         android:defaultValue="true" />
     <Preference android:title="@string/select_apps">
         <intent android:action="speech.niyo.com.niyospeech.MainActivity"/>

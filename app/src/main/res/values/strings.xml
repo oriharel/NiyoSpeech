@@ -21,5 +21,7 @@
     <string name="add_home_wifi">Add your home WiFi here</string>
     <string name="wifi_work_title">Work WiFi</string>
     <string name="add_work_wifi">Add your work WiFi here</string>
+    <string name="switch_on">Speech is ON!</string>
+    <string name="switch_off">Speech is OFF!</string>
 
 </resources>

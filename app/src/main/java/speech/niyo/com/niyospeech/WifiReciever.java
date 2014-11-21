@@ -52,7 +52,8 @@ public class WifiReciever extends BroadcastReceiver {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("general_switch", false);
             editor.commit();
-            showShutingdownNotification(context, sharedPref);
+            //Bad idea...
+//            showShutingdownNotification(context, sharedPref);
         }
     }
 

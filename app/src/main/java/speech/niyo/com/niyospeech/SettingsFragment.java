@@ -14,6 +14,7 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.speech.tts.TextToSpeech;
 
 import java.util.List;
@@ -62,6 +63,15 @@ public class SettingsFragment extends PreferenceFragment implements
         wifiHome.setSummary(sharedPref.getString("wifi_home", getActivity().getResources().getString(R.string.add_home_wifi)));
         wifiWork.setSummary(sharedPref.getString("wifi_work", getActivity().getResources().getString(R.string.add_work_wifi)));
 
+        Boolean isOn = sharedPref.getBoolean("general_switch", false);
+        Preference genPref = findPreference("general_switch");
+        if (isOn){
+            genPref.setSummary(getActivity().getResources().getString(R.string.switch_on));
+        }
+        else {
+            genPref.setSummary(getActivity().getResources().getString(R.string.switch_off));
+        }
+
     }
 
     private CharSequence[] getNetworksValues(List<WifiConfiguration> networks) {
@@ -85,10 +95,17 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("general_switch")) {
-            CheckBoxPreference connectionPref = (CheckBoxPreference)findPreference(key);
+            SwitchPreference generalSwitch = (SwitchPreference)findPreference(key);
             // Set summary to be the user-description for the selected value
+
             Boolean value = sharedPreferences.getBoolean(key, false);
-            connectionPref.setChecked(value);
+            if (value) {
+                generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_on));
+            }
+            else {
+                generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_off));
+            }
+            generalSwitch.setChecked(value);
 
         }
         else if (key.equals("wifi_home")) {
