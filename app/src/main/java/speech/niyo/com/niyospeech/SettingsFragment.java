@@ -72,6 +72,14 @@ public class SettingsFragment extends PreferenceFragment implements
             genPref.setSummary(getActivity().getResources().getString(R.string.switch_off));
         }
 
+        String homeAddress = sharedPref.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo));
+        Preference geoHome = findPreference("geo_home");
+        geoHome.setSummary(homeAddress);
+
+        String workAddress = sharedPref.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo));
+        Preference geoWork = findPreference("geo_work");
+        geoWork.setSummary(workAddress);
+
     }
 
     private CharSequence[] getNetworksValues(List<WifiConfiguration> networks) {
@@ -115,6 +123,14 @@ public class SettingsFragment extends PreferenceFragment implements
         else if (key.equals("wifi_work")) {
             Preference wifiHome = findPreference("wifi_work");
             wifiHome.setSummary(sharedPreferences.getString("wifi_work", getActivity().getResources().getString(R.string.add_home_wifi)));
+        }
+        else if (key.equals("geo_home")) {
+            Preference wifiHome = findPreference("geo_home");
+            wifiHome.setSummary(sharedPreferences.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo)));
+        }
+        else if (key.equals("geo_work")) {
+            Preference wifiHome = findPreference("geo_work");
+            wifiHome.setSummary(sharedPreferences.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo)));
         }
     }
 

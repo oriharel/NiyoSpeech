@@ -6,8 +6,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 
@@ -52,11 +54,19 @@ public class AddressPreference extends EditTextPreference {
         super.onBindDialogView(view);
 
 
-        final View editText = view.findViewById(android.R.id.edit);
+        final EditText editText = (EditText)view.findViewById(android.R.id.edit);
         ViewGroup vg = (ViewGroup)editText.getParent();
         AutoCompleteTextView ac = new AutoCompleteTextView(getContext());
         ArrayAdapter<String> adapter = new PlacesAutoCompleteAdapter(getContext(), R.layout.address_list_item);
         ac.setAdapter(adapter);
+        ac.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String str = (String) adapterView.getItemAtPosition(position);
+                editText.setText(str);
+            }
+        });
+        ac.setText(editText.getText());
         vg.addView(ac, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         editText.setVisibility(View.GONE);
     }
