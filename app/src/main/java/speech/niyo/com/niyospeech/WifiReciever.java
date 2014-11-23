@@ -52,8 +52,6 @@ public class WifiReciever extends BroadcastReceiver {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("general_switch", false);
             editor.commit();
-            //Bad idea...
-//            showShutingdownNotification(context, sharedPref);
         }
     }
 
@@ -69,25 +67,6 @@ public class WifiReciever extends BroadcastReceiver {
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo connectionInfo = wifiManager.getConnectionInfo();
         return connectionInfo.getSSID().equals(workWifi);
-    }
-
-    private void showShutingdownNotification(Context context, SharedPreferences sharedPref) {
-        String message = "";
-        if (isAtHome(context, sharedPref)) {
-            message = "Welcome Home!";
-        }
-        else if (isAtWork(context, sharedPref)) {
-            message = "Have a great day!";
-        }
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.speak)
-                        .setContentTitle(message);
-
-
-        NotificationManager mNotificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(2, mBuilder.build());
     }
 
     public boolean isInternetConnected(Context context) {

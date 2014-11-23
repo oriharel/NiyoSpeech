@@ -1,5 +1,6 @@
 package speech.niyo.com.niyospeech;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.NotificationCompat;
 
 import java.util.List;
 
@@ -114,6 +116,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_off));
             }
             generalSwitch.setChecked(value);
+            showShutingdownNotification(value);
 
         }
         else if (key.equals("wifi_home")) {
@@ -132,6 +135,25 @@ public class SettingsFragment extends PreferenceFragment implements
             Preference wifiHome = findPreference("geo_work");
             wifiHome.setSummary(sharedPreferences.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo)));
         }
+    }
+
+    private void showShutingdownNotification(Boolean isOn) {
+        String message;
+        if (isOn) {
+            message = "NIYO Speech is On!";
+        }
+        else {
+            message = "NIYO Speech is off!";
+        }
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getActivity())
+                        .setSmallIcon(R.drawable.speak)
+                        .setContentTitle(message);
+
+
+        NotificationManager mNotificationManager = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(2, mBuilder.build());
     }
 
     @Override
