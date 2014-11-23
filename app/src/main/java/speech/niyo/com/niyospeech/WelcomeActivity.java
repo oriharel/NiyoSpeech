@@ -36,7 +36,7 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
             int requestCode, int resultCode, Intent data) {
         // Decide what to do based on the original request code
         switch (requestCode) {
-            case GeoSpeechFragment.CONNECTION_FAILURE_RESOLUTION_REQUEST :
+            case GeoSpeechManager.CONNECTION_FAILURE_RESOLUTION_REQUEST :
             /*
              * If the result code is Activity.RESULT_OK, try
              * to connect again
@@ -66,7 +66,7 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
             startActivity(intent);
         }
         if (id == R.id.action_geo) {
-            fragment = new GeoSpeechFragment();
+//            fragment = new GeoSpeechManager();
         }
 
         if (fragment != null) {

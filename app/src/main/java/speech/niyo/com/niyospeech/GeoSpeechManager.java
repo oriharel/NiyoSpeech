@@ -3,19 +3,11 @@ package speech.niyo.com.niyospeech;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -30,7 +22,7 @@ import java.util.List;
 import speech.niyo.com.niyospeech.speakers.SimpleGeofence;
 
 
-public class GeoSpeechFragment extends Fragment implements
+public class GeoSpeechManager implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationClient.OnAddGeofencesResultListener {
@@ -41,6 +33,7 @@ public class GeoSpeechFragment extends Fragment implements
      */
     public final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    Activity _activity;
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -98,7 +91,7 @@ public class GeoSpeechFragment extends Fragment implements
         if (connectionResult.hasResolution()) {
             try {
                 connectionResult.startResolutionForResult(
-                        getActivity(),
+                        _activity,
                         CONNECTION_FAILURE_RESOLUTION_REQUEST);
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
@@ -111,7 +104,7 @@ public class GeoSpeechFragment extends Fragment implements
             // Get the error dialog from Google Play services
             Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
                     errorCode,
-                    getActivity(),
+                    _activity,
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
             // If Google Play services can provide an error dialog
             if (errorDialog != null) {
@@ -122,7 +115,7 @@ public class GeoSpeechFragment extends Fragment implements
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
                 errorFragment.show(
-                        getFragmentManager(),
+                        _activity.getFragmentManager(),
                         "Geofence Detection");
             }
         }
@@ -172,13 +165,13 @@ public class GeoSpeechFragment extends Fragment implements
      */
     private PendingIntent getTransitionPendingIntent() {
         // Create an explicit Intent
-        Intent intent = new Intent(getActivity(),
+        Intent intent = new Intent(_activity,
                 ReceiveTransitionsIntentService.class);
         /*
          * Return the PendingIntent
          */
         return PendingIntent.getService(
-                getActivity(),
+                _activity,
                 0,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -219,28 +212,21 @@ public class GeoSpeechFragment extends Fragment implements
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public GeoSpeechManager(Activity activity) {
+
+        _activity = activity;
 
         // Start with the request flag set to false
         mInProgress = false;
 
 
         // Instantiate a new geofence storage area
-        mGeofenceStorage = new SimpleGeofenceStore(getActivity());
+        mGeofenceStorage = new SimpleGeofenceStore(activity);
 
         // Instantiate the current List of geofences
         mGeofenceList = new ArrayList<Geofence>();
         createGeofences();
         addGeofences();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.activity_geo_speech, container, false);
-        return layout;
     }
 
     public void addGeofences() {
@@ -260,7 +246,7 @@ public class GeoSpeechFragment extends Fragment implements
          * OnConnectionFailedListener, pass the current activity object
          * as the listener for both parameters
          */
-        mLocationClient = new LocationClient(getActivity(), this, this);
+        mLocationClient = new LocationClient(_activity, this, this);
         // If a request is not already underway
         if (!mInProgress) {
             // Indicate that a request is underway
@@ -318,7 +304,7 @@ public class GeoSpeechFragment extends Fragment implements
         // Check that Google Play services is available
         int resultCode =
                 GooglePlayServicesUtil.
-                        isGooglePlayServicesAvailable(getActivity());
+                        isGooglePlayServicesAvailable(_activity);
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
@@ -331,7 +317,7 @@ public class GeoSpeechFragment extends Fragment implements
             // Get the error dialog from Google Play services
             Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
                     resultCode,
-                    getActivity(),
+                    _activity,
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             // If Google Play services can provide an error dialog
@@ -343,7 +329,7 @@ public class GeoSpeechFragment extends Fragment implements
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
                 errorFragment.show(
-                        getFragmentManager(),
+                        _activity.getFragmentManager(),
                         "Activity Recognition");
             }
             return false;

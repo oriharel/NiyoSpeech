@@ -1,7 +1,12 @@
 package speech.niyo.com.niyospeech;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.location.Location;
 import android.preference.EditTextPreference;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +41,20 @@ public class AddressPreference extends EditTextPreference {
     private static final String OUT_JSON = "/json";
 
     private static final String API_KEY = "AIzaSyDwamDrY7mp6CKS8SvWZJaerxe73i6mMqs";
+    private NIYOLocation _selectedLocation;
+    private String mKey;
 
     public AddressPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                com.android.internal.R.styleable.Preference, defStyle, 0);
+        for (int i = a.getIndexCount(); i >= 0; i--) {
+            int attr = a.getIndex(i);
+            if (attr == com.android.internal.R.styleable.Preference_key) {
+                mKey = a.getString(attr);
+            }
+        }
     }
 
     public AddressPreference(Context context, AttributeSet attrs) {
@@ -57,13 +73,14 @@ public class AddressPreference extends EditTextPreference {
         final EditText editText = (EditText)view.findViewById(android.R.id.edit);
         ViewGroup vg = (ViewGroup)editText.getParent();
         AutoCompleteTextView ac = new AutoCompleteTextView(getContext());
-        ArrayAdapter<String> adapter = new PlacesAutoCompleteAdapter(getContext(), R.layout.address_list_item);
+        ArrayAdapter<NIYOLocation> adapter = new PlacesAutoCompleteAdapter(getContext(), R.layout.address_list_item);
         ac.setAdapter(adapter);
         ac.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String str = (String) adapterView.getItemAtPosition(position);
-                editText.setText(str);
+                NIYOLocation location = (NIYOLocation) adapterView.getItemAtPosition(position);
+                editText.setText(location.getText());
+                _selectedLocation = location;
             }
         });
         ac.setText(editText.getText());
@@ -71,8 +88,17 @@ public class AddressPreference extends EditTextPreference {
         editText.setVisibility(View.GONE);
     }
 
-    private ArrayList<String> autocomplete(String input) {
-        ArrayList<String> resultList = null;
+    @Override
+    protected void onDialogClosed(boolean positiveResult) {
+        super.onDialogClosed(positiveResult);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPref.edit().putString(mKey+"_latitude", _selectedLocation.getLatitude()).apply();
+        sharedPref.edit().putString(mKey+"_longitude", _selectedLocation.getLongitude()).apply();
+    }
+
+    private ArrayList<NIYOLocation> autocomplete(String input) {
+        ArrayList<NIYOLocation> resultList = null;
 
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
@@ -110,9 +136,11 @@ public class AddressPreference extends EditTextPreference {
             JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
 
             // Extract the Place descriptions from the results
-            resultList = new ArrayList<String>(predsJsonArray.length());
+            resultList = new ArrayList<NIYOLocation>(predsJsonArray.length());
             for (int i = 0; i < predsJsonArray.length(); i++) {
-                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+                NIYOLocation currLoc = new NIYOLocation();
+                currLoc.setText(predsJsonArray.getJSONObject(i).getString("description"));
+                resultList.add(currLoc);
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Cannot process JSON results", e);
@@ -121,8 +149,8 @@ public class AddressPreference extends EditTextPreference {
         return resultList;
     }
 
-    private class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable {
-        private ArrayList<String> resultList;
+    private class PlacesAutoCompleteAdapter extends ArrayAdapter<NIYOLocation> implements Filterable {
+        private ArrayList<NIYOLocation> resultList;
 
         public PlacesAutoCompleteAdapter(Context context, int textViewResourceId) {
             super(context, textViewResourceId);
@@ -134,7 +162,7 @@ public class AddressPreference extends EditTextPreference {
         }
 
         @Override
-        public String getItem(int index) {
+        public NIYOLocation getItem(int index) {
             return resultList.get(index);
         }
 
