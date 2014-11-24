@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener, TextToSpeech.OnInitListener {
 
     private TextToSpeech _defaultTts;
+    private GeoSpeechManager _geoManager;
+    public static final String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,9 @@ public class SettingsFragment extends PreferenceFragment implements
         Preference geoWork = findPreference("geo_work");
         geoWork.setSummary(workAddress);
 
+        _geoManager = new GeoSpeechManager(getActivity());
+        _geoManager.startTracking();
+
     }
 
     private CharSequence[] getNetworksValues(List<WifiConfiguration> networks) {
@@ -109,12 +115,15 @@ public class SettingsFragment extends PreferenceFragment implements
             // Set summary to be the user-description for the selected value
 
             Boolean value = sharedPreferences.getBoolean(key, false);
-            if (value) {
-                generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_on));
+            if (getActivity() != null) {
+                if (value) {
+                    generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_on));
+                }
+                else {
+                    generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_off));
+                }
             }
-            else {
-                generalSwitch.setSummary(getActivity().getResources().getString(R.string.switch_off));
-            }
+
             generalSwitch.setChecked(value);
             showShutingdownNotification(value);
 
@@ -128,12 +137,30 @@ public class SettingsFragment extends PreferenceFragment implements
             wifiHome.setSummary(sharedPreferences.getString("wifi_work", getActivity().getResources().getString(R.string.add_home_wifi)));
         }
         else if (key.equals("geo_home")) {
-            Preference wifiHome = findPreference("geo_home");
-            wifiHome.setSummary(sharedPreferences.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo)));
+            Preference geoHome = findPreference("geo_home");
+            geoHome.setSummary(sharedPreferences.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo)));
         }
         else if (key.equals("geo_work")) {
-            Preference wifiHome = findPreference("geo_work");
-            wifiHome.setSummary(sharedPreferences.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo)));
+            Preference geoWork = findPreference("geo_work");
+            geoWork.setSummary(sharedPreferences.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo)));
+        }
+        else if (key.equals("geo_home_latitude")) {
+            if (_geoManager != null) {
+//                _geoManager.stopTracking();
+                _geoManager.startTracking();
+            }
+            else {
+                Log.e(LOG_TAG, "error, geo manager not initiated");
+            }
+        }
+        else if (key.equals("geo_work_latitude")) {
+            if (_geoManager != null) {
+//                _geoManager.stopTracking();
+                _geoManager.startTracking();
+            }
+            else {
+                Log.e(LOG_TAG, "error, geo manager not initiated");
+            }
         }
     }
 

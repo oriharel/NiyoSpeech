@@ -22,6 +22,7 @@ import java.util.List;
 public class ReceiveTransitionsIntentService extends IntentService {
 
     // Persistent storage for geofences
+    public static final String LOG_TAG = ReceiveTransitionsIntentService.class.getSimpleName();
 
     public ReceiveTransitionsIntentService() {
 
@@ -31,6 +32,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(LOG_TAG, "onHandleIntent received!!");
         // First check for errors
         if (LocationClient.hasError(intent)) {
             // Get the error code with a static method

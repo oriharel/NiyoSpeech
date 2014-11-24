@@ -6,7 +6,9 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -25,7 +27,8 @@ import speech.niyo.com.niyospeech.speakers.SimpleGeofence;
 public class GeoSpeechManager implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
-        LocationClient.OnAddGeofencesResultListener {
+        LocationClient.OnAddGeofencesResultListener,
+        LocationClient.OnRemoveGeofencesResultListener{
 
     /*
      * Define a request code to send to Google Play services
@@ -34,17 +37,26 @@ public class GeoSpeechManager implements
     public final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     Activity _activity;
+    public static final String LOG_TAG = GeoSpeechManager.class.getSimpleName();
 
     @Override
     public void onConnected(Bundle bundle) {
+        // Get the PendingIntent for the request
+        mGeofenceRequestIntent =
+                getTransitionPendingIntent();
+
         switch (mRequestType) {
             case ADD :
-                // Get the PendingIntent for the request
-                mGeofenceRequestIntent =
-                        getTransitionPendingIntent();
-                // Send a request to add the current geofences
-                mLocationClient.addGeofences(
-                        mGeofenceList, mGeofenceRequestIntent, this);
+
+                if (mGeofenceList.size() > 0) {
+                    // Send a request to add the current geofences
+                    Log.d(LOG_TAG, "adding "+mGeofenceList.size()+" fences");
+                    mLocationClient.addGeofences(
+                            mGeofenceList, mGeofenceRequestIntent, this);
+                }
+
+            case REMOVE:
+                mLocationClient.removeGeofences(mGeofenceRequestIntent, this);
         }
     }
 
@@ -121,6 +133,16 @@ public class GeoSpeechManager implements
         }
     }
 
+    @Override
+    public void onRemoveGeofencesByRequestIdsResult(int i, String[] strings) {
+
+    }
+
+    @Override
+    public void onRemoveGeofencesByPendingIntentResult(int i, PendingIntent pendingIntent) {
+
+    }
+
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         // Global field to contain the error dialog
@@ -180,22 +202,9 @@ public class GeoSpeechManager implements
     /*
      * Internal geofence objects for geofence 1 and 2
      */
-    private SimpleGeofence mUIGeofenceHome;
-    private SimpleGeofence mUIGeofenceWork;
 
-
-    // Handle to geofence 1 latitude in the UI
-    private String mLatitudeHome = "32.188909";
-    // Handle to geofence 1 longitude in the UI
-    private String mLongitudeHome = "34.896679";
     // Handle to geofence 1 radius in the UI
     private String mRadiusHome = "200";
-    // Handle to geofence 2 latitude in the UI
-    private String mLatitudeWork = "32.130586";
-    // Handle to geofence 2 longitude in the UI
-    private String mLongitudeWork = "34.893457";
-    // Handle to geofence 2 radius in the UI
-    private String mRadiusWork = "200";
 
     // Internal List of Geofence objects
     List<Geofence> mGeofenceList;
@@ -207,7 +216,7 @@ public class GeoSpeechManager implements
     // Stores the PendingIntent used to request geofence monitoring
     private PendingIntent mGeofenceRequestIntent;
     // Defines the allowable request types.
-    public enum REQUEST_TYPE {ADD}
+    public enum REQUEST_TYPE {ADD, REMOVE}
     private REQUEST_TYPE mRequestType;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
@@ -225,13 +234,23 @@ public class GeoSpeechManager implements
 
         // Instantiate the current List of geofences
         mGeofenceList = new ArrayList<Geofence>();
-        createGeofences();
-        addGeofences();
+
     }
 
-    public void addGeofences() {
-        // Start a request to add geofences
+    public void startTracking() {
+        createGeofences();
         mRequestType = REQUEST_TYPE.ADD;
+        addOrRemoveGeofences();
+    }
+
+    public void stopTracking() {
+        mRequestType = REQUEST_TYPE.REMOVE;
+        addOrRemoveGeofences();
+    }
+
+    public void addOrRemoveGeofences() {
+        Log.d(LOG_TAG, "addOrRemoveGeofences");
+        // Start a request to add geofences
         /*
          * Test for Google Play services after setting the request type.
          * If Google Play services isn't present, the proper request
@@ -268,36 +287,58 @@ public class GeoSpeechManager implements
      * and add them to a List.
      */
     public void createGeofences() {
+        Log.d(LOG_TAG, "createGeofences started");
         /*
          * Create an internal object to store the data. Set its
          * ID to "1". This is a "flattened" object that contains
          * a set of strings
          */
-        mUIGeofenceHome = new SimpleGeofence(
-                "1",
-                Double.valueOf(mLatitudeHome),
-                Double.valueOf(mLongitudeHome),
-                Float.valueOf(mRadiusHome),
-                GEOFENCE_EXPIRATION_TIME,
-                // This geofence records only entry transitions
-                Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT);
-        // Store this flat version
-        mGeofenceStorage.setGeofence("1", mUIGeofenceHome);
-        // Create another internal object. Set its ID to "2"
-        mUIGeofenceWork = new SimpleGeofence(
-                "2",
-                Double.valueOf(mLatitudeWork),
-                Double.valueOf(mLongitudeWork),
-                Float.valueOf(mRadiusWork),
-                GEOFENCE_EXPIRATION_TIME,
-                // This geofence records both entry and exit transitions
-                Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT);
-        // Store this flat version
-        mGeofenceStorage.setGeofence("2", mUIGeofenceWork);
-        mGeofenceList.add(mUIGeofenceHome.toGeofence());
-        mGeofenceList.add(mUIGeofenceWork.toGeofence());
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(_activity);
+        String defHome = _activity.getResources().getString(R.string.add_home_geo);
+        String defWork = _activity.getResources().getString(R.string.add_work_geo);
+        String latHome = sharedPref.getString("geo_home_latitude", defHome);
+        String lonHome = sharedPref.getString("geo_home_longitude", defHome);
+        String lonWork = sharedPref.getString("geo_work_longitude", defWork);
+        String latWork = sharedPref.getString("geo_work_latitude", defWork);
+        Log.d(LOG_TAG, "latHome is: "+latHome+" lonHome: "+lonHome);
+        Log.d(LOG_TAG, "latWork is: "+latWork+" lonWork: "+lonWork);
+        if (!latHome.equals(defHome) && !lonHome.equals(defHome)) {
+            SimpleGeofence uiGeofenceHome = new SimpleGeofence(
+                    "1",
+                    Double.valueOf(latHome),
+                    Double.valueOf(lonHome),
+                    Float.valueOf(mRadiusHome),
+                    GEOFENCE_EXPIRATION_TIME,
+                    // This geofence records only entry transitions
+                    Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT);
+            // Store this flat version
+            mGeofenceStorage.setGeofence("1", uiGeofenceHome);
+            mGeofenceList.add(uiGeofenceHome.toGeofence());
+        }
+        else {
+            Log.d(LOG_TAG, "can't find latHome");
+        }
+
+        if (!latWork.equals(defWork) && !lonWork.equals(defWork)) {
+            // Create another internal object. Set its ID to "2"
+            SimpleGeofence uiGeofenceWork = new SimpleGeofence(
+                    "2",
+                    Double.valueOf(latWork),
+                    Double.valueOf(lonWork),
+                    Float.valueOf(mRadiusHome),
+                    GEOFENCE_EXPIRATION_TIME,
+                    // This geofence records both entry and exit transitions
+                    Geofence.GEOFENCE_TRANSITION_ENTER |
+                            Geofence.GEOFENCE_TRANSITION_EXIT);
+            // Store this flat version
+            mGeofenceStorage.setGeofence("2", uiGeofenceWork);
+
+            mGeofenceList.add(uiGeofenceWork.toGeofence());
+        }
+        else {
+            Log.d(LOG_TAG, "can't find latWork");
+        }
     }
 
     private boolean servicesConnected() {

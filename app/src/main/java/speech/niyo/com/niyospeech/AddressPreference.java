@@ -3,6 +3,8 @@ package speech.niyo.com.niyospeech;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -29,6 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by oriharel on 11/21/14.
@@ -46,23 +49,26 @@ public class AddressPreference extends EditTextPreference {
 
     public AddressPreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setKey(attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                com.android.internal.R.styleable.Preference, defStyle, 0);
-        for (int i = a.getIndexCount(); i >= 0; i--) {
-            int attr = a.getIndex(i);
-            if (attr == com.android.internal.R.styleable.Preference_key) {
-                mKey = a.getString(attr);
-            }
-        }
     }
 
     public AddressPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setKey(attrs);
     }
 
     public AddressPreference(Context context) {
         super(context);
+    }
+
+    private void setKey(AttributeSet attrs) {
+        for (int i = 0; i < attrs.getAttributeCount(); i++) {
+            String attrName = attrs.getAttributeName(i);
+            if (attrName.equals("key")) {
+                mKey = attrs.getAttributeValue(i);
+            }
+        }
     }
 
     @Override
@@ -93,8 +99,21 @@ public class AddressPreference extends EditTextPreference {
         super.onDialogClosed(positiveResult);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sharedPref.edit().putString(mKey+"_latitude", _selectedLocation.getLatitude()).apply();
-        sharedPref.edit().putString(mKey+"_longitude", _selectedLocation.getLongitude()).apply();
+        Geocoder coder = new Geocoder(getContext());
+        try {
+            if (_selectedLocation != null) {
+                List<Address> locs = coder.getFromLocationName(_selectedLocation.getText(), 1);
+                _selectedLocation.setLatitude(Double.toString(locs.get(0).getLatitude()));
+                _selectedLocation.setLongitude(Double.toString(locs.get(0).getLongitude()));
+                Log.d(LOG_TAG, "onDialogClosed called with "+mKey+" lat is : "+_selectedLocation.getLatitude()+" lon is: "+_selectedLocation.getLongitude());
+                sharedPref.edit().putString(mKey+"_latitude", _selectedLocation.getLatitude()).commit();
+                sharedPref.edit().putString(mKey+"_longitude", _selectedLocation.getLongitude()).commit();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private ArrayList<NIYOLocation> autocomplete(String input) {
