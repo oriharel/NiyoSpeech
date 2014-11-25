@@ -138,11 +138,19 @@ public class SettingsFragment extends PreferenceFragment implements
         }
         else if (key.equals("geo_home")) {
             Preference geoHome = findPreference("geo_home");
-            geoHome.setSummary(sharedPreferences.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo)));
+            String defHome = "";
+            if (getActivity() != null) {
+                defHome = getActivity().getResources().getString(R.string.add_home_geo);
+            }
+            geoHome.setSummary(sharedPreferences.getString("geo_home", defHome));
         }
         else if (key.equals("geo_work")) {
             Preference geoWork = findPreference("geo_work");
-            geoWork.setSummary(sharedPreferences.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo)));
+            String defWork = "";
+            if (getActivity() != null) {
+                defWork = getActivity().getResources().getString(R.string.add_work_geo);
+            }
+            geoWork.setSummary(sharedPreferences.getString("geo_work", defWork));
         }
         else if (key.equals("geo_home_latitude")) {
             if (_geoManager != null) {
@@ -178,9 +186,12 @@ public class SettingsFragment extends PreferenceFragment implements
                         .setSmallIcon(R.drawable.speak)
                         .setContentTitle(message);
 
+        if (getActivity() != null) {
+            NotificationManager mNotificationManager = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(2, mBuilder.build());
+        }
 
-        NotificationManager mNotificationManager = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(2, mBuilder.build());
+
     }
 
     @Override
