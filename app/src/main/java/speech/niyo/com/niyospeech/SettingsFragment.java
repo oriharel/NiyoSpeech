@@ -130,11 +130,17 @@ public class SettingsFragment extends PreferenceFragment implements
         }
         else if (key.equals("wifi_home")) {
             Preference wifiHome = findPreference("wifi_home");
-            wifiHome.setSummary(sharedPreferences.getString("wifi_home", getActivity().getResources().getString(R.string.add_home_wifi)));
+            if (getActivity() != null) {
+                wifiHome.setSummary(sharedPreferences.getString("wifi_home", getActivity().getResources().getString(R.string.add_home_wifi)));
+            }
+
         }
         else if (key.equals("wifi_work")) {
             Preference wifiHome = findPreference("wifi_work");
-            wifiHome.setSummary(sharedPreferences.getString("wifi_work", getActivity().getResources().getString(R.string.add_home_wifi)));
+            if (getActivity() != null){
+                wifiHome.setSummary(sharedPreferences.getString("wifi_work", getActivity().getResources().getString(R.string.add_home_wifi)));
+            }
+
         }
         else if (key.equals("geo_home")) {
             Preference geoHome = findPreference("geo_home");

@@ -51,6 +51,10 @@ public class GeoSpeechManager implements
                 if (mGeofenceList.size() > 0) {
                     // Send a request to add the current geofences
                     Log.d(LOG_TAG, "adding "+mGeofenceList.size()+" fences");
+                    for (int i = 0; i < mGeofenceList.size(); i++) {
+                        Geofence fence = mGeofenceList.get(i);
+
+                    }
                     mLocationClient.addGeofences(
                             mGeofenceList, mGeofenceRequestIntent, this);
                 }
