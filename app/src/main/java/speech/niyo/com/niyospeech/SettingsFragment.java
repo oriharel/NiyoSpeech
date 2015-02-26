@@ -20,7 +20,9 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by oriharel on 11/17/14.
@@ -51,42 +53,48 @@ public class SettingsFragment extends PreferenceFragment implements
             Preference ttsLabel = findPreference("tts_label");
             ttsLabel.setSummary(engineLabel);
 
+
+
+            WifiManager wifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
+            List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
+            CharSequence[] networksNames = getNetworskNames(networks);
+            CharSequence[] networksValues = getNetworksValues(networks);
+            ListPreference wifiHome = (ListPreference)findPreference("wifi_home");
+            ListPreference wifiWork = (ListPreference)findPreference("wifi_work");
+            wifiHome.setEntries(networksNames);
+            wifiWork.setEntries(networksNames);
+            wifiHome.setEntryValues(networksValues);
+            wifiWork.setEntryValues(networksValues);
+            wifiHome.setSummary(sharedPref.getString("wifi_home", getActivity().getResources().getString(R.string.add_home_wifi)));
+            wifiWork.setSummary(sharedPref.getString("wifi_work", getActivity().getResources().getString(R.string.add_work_wifi)));
+
+            Boolean isOn = sharedPref.getBoolean("general_switch", false);
+            Preference genPref = findPreference("general_switch");
+            if (isOn){
+                genPref.setSummary(getActivity().getResources().getString(R.string.switch_on));
+            }
+            else {
+                genPref.setSummary(getActivity().getResources().getString(R.string.switch_off));
+            }
+
+            String homeAddress = sharedPref.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo));
+            Preference geoHome = findPreference("geo_home");
+            geoHome.setSummary(homeAddress);
+
+            String workAddress = sharedPref.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo));
+            Preference geoWork = findPreference("geo_work");
+            geoWork.setSummary(workAddress);
+
+            _geoManager = new GeoSpeechManager(getActivity());
+            _geoManager.startTracking();
+
+            Set<String> langs = sharedPref.getStringSet("languages", new HashSet<String>());
+            langs.add("All***"+engineLabel);
+            sharedPref.edit().putStringSet("languages", langs).commit();
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-        WifiManager wifiManager = (WifiManager)getActivity().getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
-        CharSequence[] networksNames = getNetworskNames(networks);
-        CharSequence[] networksValues = getNetworksValues(networks);
-        ListPreference wifiHome = (ListPreference)findPreference("wifi_home");
-        ListPreference wifiWork = (ListPreference)findPreference("wifi_work");
-        wifiHome.setEntries(networksNames);
-        wifiWork.setEntries(networksNames);
-        wifiHome.setEntryValues(networksValues);
-        wifiWork.setEntryValues(networksValues);
-        wifiHome.setSummary(sharedPref.getString("wifi_home", getActivity().getResources().getString(R.string.add_home_wifi)));
-        wifiWork.setSummary(sharedPref.getString("wifi_work", getActivity().getResources().getString(R.string.add_work_wifi)));
-
-        Boolean isOn = sharedPref.getBoolean("general_switch", false);
-        Preference genPref = findPreference("general_switch");
-        if (isOn){
-            genPref.setSummary(getActivity().getResources().getString(R.string.switch_on));
-        }
-        else {
-            genPref.setSummary(getActivity().getResources().getString(R.string.switch_off));
-        }
-
-        String homeAddress = sharedPref.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo));
-        Preference geoHome = findPreference("geo_home");
-        geoHome.setSummary(homeAddress);
-
-        String workAddress = sharedPref.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo));
-        Preference geoWork = findPreference("geo_work");
-        geoWork.setSummary(workAddress);
-
-        _geoManager = new GeoSpeechManager(getActivity());
-        _geoManager.startTracking();
 
     }
 

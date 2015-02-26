@@ -14,7 +14,8 @@
         <intent android:action="android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"/>
     </Preference>
     <Preference android:title="Text to Speech Engine" android:summary="Aharon" android:key="tts_label">
-        <intent android:action="com.android.settings.TTS_SETTINGS"/>
+        <!--<intent android:action="com.android.settings.TTS_SETTINGS"/>-->
+        <intent android:action="speech.niyo.com.niyospeech.LangActivity"/>
     </Preference>
 
     <CheckBoxPreference
