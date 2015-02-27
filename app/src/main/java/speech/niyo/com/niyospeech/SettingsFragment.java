@@ -77,16 +77,16 @@ public class SettingsFragment extends PreferenceFragment implements
                 genPref.setSummary(getActivity().getResources().getString(R.string.switch_off));
             }
 
-            String homeAddress = sharedPref.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo));
-            Preference geoHome = findPreference("geo_home");
-            geoHome.setSummary(homeAddress);
-
-            String workAddress = sharedPref.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo));
-            Preference geoWork = findPreference("geo_work");
-            geoWork.setSummary(workAddress);
-
-            _geoManager = new GeoSpeechManager(getActivity());
-            _geoManager.startTracking();
+//            String homeAddress = sharedPref.getString("geo_home", getActivity().getResources().getString(R.string.add_home_geo));
+//            Preference geoHome = findPreference("geo_home");
+//            geoHome.setSummary(homeAddress);
+//
+//            String workAddress = sharedPref.getString("geo_work", getActivity().getResources().getString(R.string.add_work_geo));
+//            Preference geoWork = findPreference("geo_work");
+//            geoWork.setSummary(workAddress);
+//
+//            _geoManager = new GeoSpeechManager(getActivity());
+//            _geoManager.startTracking();
 
             Set<String> langs = sharedPref.getStringSet("languages", new HashSet<String>());
             langs.add("All***"+engineLabel);

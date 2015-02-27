@@ -44,26 +44,26 @@
             android:dependency="wifi_detect">
         </ListPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/geo_pref_category">
-        <CheckBoxPreference
-            android:key="geo_detect"
-            android:title="@string/pref_title_geo_detect"
-            android:summary="@string/pref_description_geo_detect"
-            android:defaultValue="true" />
-        <speech.niyo.com.niyospeech.AddressPreference
-            android:key="geo_home"
-            android:title="@string/geo_home_title"
-            android:summary="@string/add_home_geo"
-            android:dependency="geo_detect">
-        </speech.niyo.com.niyospeech.AddressPreference>
+    <!--<PreferenceCategory android:title="@string/geo_pref_category">-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="geo_detect"-->
+            <!--android:title="@string/pref_title_geo_detect"-->
+            <!--android:summary="@string/pref_description_geo_detect"-->
+            <!--android:defaultValue="true" />-->
+        <!--<speech.niyo.com.niyospeech.AddressPreference-->
+            <!--android:key="geo_home"-->
+            <!--android:title="@string/geo_home_title"-->
+            <!--android:summary="@string/add_home_geo"-->
+            <!--android:dependency="geo_detect">-->
+        <!--</speech.niyo.com.niyospeech.AddressPreference>-->
 
-        <speech.niyo.com.niyospeech.AddressPreference
-            android:key="geo_work"
-            android:title="@string/wifi_geo_title"
-            android:summary="@string/add_work_geo"
-            android:dependency="geo_detect">
-        </speech.niyo.com.niyospeech.AddressPreference>
-    </PreferenceCategory>
+        <!--<speech.niyo.com.niyospeech.AddressPreference-->
+            <!--android:key="geo_work"-->
+            <!--android:title="@string/wifi_geo_title"-->
+            <!--android:summary="@string/add_work_geo"-->
+            <!--android:dependency="geo_detect">-->
+        <!--</speech.niyo.com.niyospeech.AddressPreference>-->
+    <!--</PreferenceCategory>-->
 
 
 
