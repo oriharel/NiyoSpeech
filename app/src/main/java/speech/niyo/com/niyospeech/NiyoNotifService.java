@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.os.Build;
@@ -91,6 +93,12 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
         Log.d(LOG_TAG, "received new notification");
         Notification notif = sbn.getNotification();
         String pkg = sbn.getPackageName();
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = getPackageManager().getApplicationInfo(pkg, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         logNotif(notif, pkg);
 
@@ -111,9 +119,6 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
             cursor.moveToNext();
         }
 
-//        selecteds.add("com.google.android.talk");
-//        selecteds.add("com.google.android.gm");
-
         if (!selecteds.contains(pkg)) return;
 
         NiyoSpeaker speaker = getSpeaker(pkg);
@@ -123,13 +128,21 @@ public class NiyoNotifService extends NotificationListenerService implements Tex
             return;
         }
 
-        String textToSpeak = speaker.resolveText(notif);
+        String appName = "";
+
+        if (appInfo != null) {
+            appName = getPackageManager().getApplicationLabel(appInfo).toString();
+        }
+
+
+        String textToSpeak = appName+", "+speaker.resolveText(notif);
 
         _chosenTts = _defaultTts;
 
         if (!isHebrewInText(textToSpeak)) {
             _chosenTts = _englishTts;
         }
+
 
         Log.d(LOG_TAG, "ok, going to speak "+textToSpeak+" for pkg "+pkg+" with tts: "+_chosenTts.toString());
 

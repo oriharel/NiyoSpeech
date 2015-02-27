@@ -28,6 +28,7 @@ public class NiyoSpeaker {
 
     public String resolveText(Notification notif) {
 
+        Log.d(LOG_TAG, "resolveText started");
         CharSequence text = notif.tickerText;
 
         Object contentText = getContentTextKiKat(notif);
@@ -41,14 +42,15 @@ public class NiyoSpeaker {
 
         if (contentText != null) {
             result = contentText.toString();
+            Log.d(LOG_TAG, "result is: "+result);
         }
 
         if (result == null && text != null) {
-            Log.d(LOG_TAG, "contentText is null, returning text");
+            Log.d(LOG_TAG, "contentText is null, returning text: "+text);
             result = text.toString();
         }
         else if (text != null && !result.equals(text)){
-            Log.d(LOG_TAG, "contentText is NOT null and text is different");
+            Log.d(LOG_TAG, "contentText is NOT null and text is different result: "+result+" text: "+text);
             result = text+" "+contentText;
         }
         else {
