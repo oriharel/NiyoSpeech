@@ -73,6 +73,11 @@
 
                 <category android:name="com.niyo" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
+
+                <category android:name="com.niyo" />
+            </intent-filter>
         </receiver>
 
         <service

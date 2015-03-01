@@ -11,11 +11,19 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file("niyogo.keystore")
+            storePassword "hagav6367"
+            keyAlias "niyogo"
+            keyPassword "hagav6367"
+        }
+    }
     buildTypes {
         release {
 
             minifyEnabled false // new version
-
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

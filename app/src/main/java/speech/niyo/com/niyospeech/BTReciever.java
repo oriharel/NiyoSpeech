@@ -2,6 +2,7 @@ package speech.niyo.com.niyospeech;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +27,11 @@ public class BTReciever extends BroadcastReceiver {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
+        Boolean toEnable = intent.getAction().equals(BluetoothDevice.ACTION_ACL_CONNECTED);
+
         if (sharedPref.getBoolean("bt_detect", true)) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putBoolean("general_switch", true);
+            editor.putBoolean("general_switch", toEnable);
             editor.commit();
         }
 
