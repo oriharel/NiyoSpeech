@@ -35,20 +35,20 @@ public class WelcomeActivity extends Activity implements NiyoInteraction {
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         // Decide what to do based on the original request code
-        switch (requestCode) {
-            case GeoSpeechManager.CONNECTION_FAILURE_RESOLUTION_REQUEST :
+//        switch (requestCode) {
+//            case GeoSpeechManager.CONNECTION_FAILURE_RESOLUTION_REQUEST :
             /*
              * If the result code is Activity.RESULT_OK, try
              * to connect again
              */
-                switch (resultCode) {
-                    case Activity.RESULT_OK :
+//                switch (resultCode) {
+//                    case Activity.RESULT_OK :
                     /*
                      * Try the request again
                      */
-                        break;
-                }
-        }
+//                        break;
+//                }
+//        }
     }
 
     @Override
