@@ -1,24 +1,18 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.apps;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import speech.niyo.com.niyospeech.R;
 
 /**
  * Created by oriharel on 7/13/14.

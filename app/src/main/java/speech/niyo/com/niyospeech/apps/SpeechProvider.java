@@ -1,4 +1,4 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.apps;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -11,6 +11,10 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.util.HashMap;
+
+import speech.niyo.com.niyospeech.AndroidUtil;
+import speech.niyo.com.niyospeech.NiyoDbHelper;
+import speech.niyo.com.niyospeech.NiyoSpeech;
 
 public class SpeechProvider extends ContentProvider {
     public static final String LOG_TAG = SpeechProvider.class.getSimpleName();

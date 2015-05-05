@@ -11,14 +11,14 @@
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
-        android:name="speech.niyo.com.niyospeech.NiyoApplication"
+        android:name=".NiyoApplication"
         android:allowBackup="true"
         android:icon="@drawable/speak"
         android:label="@string/app_name" >
         <activity
-            android:name="speech.niyo.com.niyospeech.SettingsActivity"
-            android:label="@string/app_name"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:name=".SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
         </activity>
 
         <service
-            android:name="speech.niyo.com.niyospeech.NiyoNotifService"
+            android:name=".NiyoNotifService"
             android:label="@string/service_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" >
             <intent-filter>
@@ -36,7 +36,7 @@
         </service>
 
         <activity
-            android:name="speech.niyo.com.niyospeech.MainActivity"
+            android:name=".apps.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="speech.niyo.com.niyospeech.MainActivity" />
@@ -44,21 +44,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="speech.niyo.com.niyospeech.WelcomeActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme" >
-        </activity>
 
         <provider
-            android:name="speech.niyo.com.niyospeech.SpeechProvider"
+            android:name=".apps.SpeechProvider"
             android:authorities="com.niyo.speech.provider"
             android:enabled="true"
             android:exported="true" >
         </provider>
 
         <receiver
-            android:name="speech.niyo.com.niyospeech.WifiReciever"
+            android:name=".wifi.WifiReciever"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -66,7 +61,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="speech.niyo.com.niyospeech.BTReciever"
+            android:name=".Bluetooth.BTReciever"
             android:enabled="true"
             android:exported="true" >
             <intent-filter>
@@ -82,7 +77,7 @@
         </receiver>
 
         <service
-            android:name="speech.niyo.com.niyospeech.AnnouncingService"
+            android:name=".AnnouncingService"
             android:exported="false" >
         </service>
 
@@ -90,24 +85,26 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <!--<service-->
-            <!--android:name="speech.niyo.com.niyospeech.ReceiveTransitionsIntentService"-->
-            <!--android:exported="false" >-->
-        <!--</service>-->
-
         <receiver
-            android:name="speech.niyo.com.niyospeech.ShutUpReceiver"
+            android:name=".speech.ShutUpReceiver"
             android:enabled="true"
             android:exported="true" >
         </receiver>
 
+        <service
+            android:name=".speech.SpeechService"
+            android:exported="false" >
+        </service>
+
         <activity
-            android:name="speech.niyo.com.niyospeech.LangActivity"
-            android:label="@string/title_activity_lang" >
+            android:name=".SpeechReaderActivity"
+            android:label="@string/title_activity_speech_reader" >
             <intent-filter>
-                <action android:name="speech.niyo.com.niyospeech.LangActivity" />
+                <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
     </application>

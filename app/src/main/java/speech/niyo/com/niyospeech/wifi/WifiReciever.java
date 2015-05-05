@@ -1,7 +1,5 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.wifi;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
@@ -13,8 +11,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import speech.niyo.com.niyospeech.R;
 
 public class WifiReciever extends BroadcastReceiver {
     public static final String LOG_TAG = WifiReciever.class.getSimpleName();

@@ -2,6 +2,8 @@ package speech.niyo.com.niyospeech;
 
 import android.net.Uri;
 
+import speech.niyo.com.niyospeech.apps.AppsColumns;
+
 /**
  * Created by oriharel on 7/15/14.
  */

@@ -1,14 +1,12 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.apps;
 
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,23 +21,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import speech.niyo.com.niyospeech.NiyoSpeech;
 import speech.niyo.com.niyospeech.R;
+import speech.niyo.com.niyospeech.SettingsActivity;
 
 public class MainActivity extends ListActivity implements AdapterView.OnItemClickListener {
 

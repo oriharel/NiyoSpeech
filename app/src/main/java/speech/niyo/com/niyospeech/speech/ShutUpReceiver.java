@@ -1,4 +1,4 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.speech;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

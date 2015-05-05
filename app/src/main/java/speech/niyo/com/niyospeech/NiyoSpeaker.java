@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +19,37 @@ import java.util.regex.Pattern;
 /**
  * Created by oriharel on 7/12/14.
  */
-public class NiyoSpeaker {
+public class NiyoSpeaker implements Serializable{
 
     public static final String LOG_TAG = NiyoSpeaker.class.getSimpleName();
 
     public void speak(String text, TextToSpeech tts, HashMap<String, String> params) {
-        tts.speak(text.toString(), TextToSpeech.QUEUE_ADD, params);
+
+        int dividerLimit = 3900;
+        if(text.length() >= dividerLimit) {
+            int textLength = text.length();
+            ArrayList<String> texts = new ArrayList<String>();
+            int count = textLength / dividerLimit + ((textLength % dividerLimit == 0) ? 0 : 1);
+            int start = 0;
+            int end = text.indexOf(" ", dividerLimit);
+            for(int i = 1; i<=count; i++) {
+                texts.add(text.substring(start, end));
+                start = end;
+                if((start + dividerLimit) < textLength) {
+                    end = text.indexOf(" ", start + dividerLimit);
+                } else {
+                    end = textLength;
+                }
+            }
+            for(int i=0; i<texts.size(); i++) {
+                tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, null);
+            }
+        } else {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
+//        Log.d(LOG_TAG, "Actually speaking "+text);
+//        tts.speak(text.toString(), TextToSpeech.QUEUE_ADD, params);
     }
 
     public String resolveText(Notification notif) {

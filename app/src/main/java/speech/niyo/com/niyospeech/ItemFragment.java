@@ -32,6 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import speech.niyo.com.niyospeech.apps.App;
+import speech.niyo.com.niyospeech.apps.AppListAdapter;
+import speech.niyo.com.niyospeech.apps.AppsColumns;
+
 /**
  * A fragment representing a list of Items.
  * <p/>

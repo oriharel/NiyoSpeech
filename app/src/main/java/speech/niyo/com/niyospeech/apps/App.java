@@ -1,4 +1,4 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.apps;
 
 import android.graphics.drawable.Drawable;
 

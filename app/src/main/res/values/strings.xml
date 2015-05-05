@@ -34,5 +34,6 @@
     <string name="all">All</string>
     <string name="title_activity_lang">LangActivity</string>
     <string name="add_new_lang">Add New Language</string>
+    <string name="title_activity_speech_reader">Read in Niyo Speech!</string>
 
 </resources>

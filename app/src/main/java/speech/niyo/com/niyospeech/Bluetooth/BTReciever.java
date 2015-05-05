@@ -1,14 +1,11 @@
-package speech.niyo.com.niyospeech;
+package speech.niyo.com.niyospeech.Bluetooth;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
 public class BTReciever extends BroadcastReceiver {

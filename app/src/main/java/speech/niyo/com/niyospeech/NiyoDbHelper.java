@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import speech.niyo.com.niyospeech.apps.AppsColumns;
+
 /**
  * Created by oriharel on 7/15/14.
  */
