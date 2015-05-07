@@ -42,10 +42,10 @@ public class NiyoSpeaker implements Serializable{
                 }
             }
             for(int i=0; i<texts.size(); i++) {
-                tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, null);
+                tts.speak(texts.get(i), TextToSpeech.QUEUE_ADD, params);
             }
         } else {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, params);
         }
 
 //        Log.d(LOG_TAG, "Actually speaking "+text);

@@ -59,7 +59,8 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
         TextToSpeech.OnInitListener listener = new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                Log.d(LOG_TAG, "text to speech initialized");
+                final UUID id = UUID.randomUUID();
+                Log.d(LOG_TAG, "text to speech initialized with status: "+status+" id is: "+id);
 
                 final AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
@@ -72,11 +73,9 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
 
 
                 int result = am.requestAudioFocus(audioListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
-                final UUID id = UUID.randomUUID();
-
-                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 
 
+                if (status == TextToSpeech.SUCCESS && result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 
                     _tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                         @Override
@@ -107,6 +106,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
                     params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter != null) {
+                        Log.d(LOG_TAG, "Bluetooth detected");
                         int state = mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
                         if (state == BluetoothProfile.STATE_CONNECTED) {
                             params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_RING));
@@ -146,6 +146,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
     }
 
     private void removeSpeakingNotification() {
+        Log.d(LOG_TAG, "removeSpeakingNotification and stopping self");
         NotificationManager mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(1);
         stopSelf();
