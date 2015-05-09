@@ -40,13 +40,6 @@ public class NiyoNotifService extends NotificationListenerService {
     public void onCreate() {
         super.onCreate();
 
-//        _defaultTts = new TextToSpeech(this, this);
-//        _englishTts = new TextToSpeech(this, this, "com.google.android.tts");
-//        List<TextToSpeech.EngineInfo> engines = _defaultTts.getEngines();
-
-//        for (TextToSpeech.EngineInfo engine: engines) {
-//            Log.d(LOG_TAG, "engine name is "+engine.name+" label is "+engine.label);
-//        }
         _speakers = new HashMap<String, NiyoSpeaker>();
         _speakers.put("com.google.android.talk", new HangoutNiyoSpeaker());
 
@@ -138,37 +131,6 @@ public class NiyoNotifService extends NotificationListenerService {
         Log.d(LOG_TAG, "text received with "+text+" pkg is "+pkg);
         Log.d(LOG_TAG, "contentText received with "+contentText+" pkg is "+pkg);
     }
-
-//    @Override
-//    public void onDestroy() {
-//        _defaultTts.shutdown();
-//        _englishTts.shutdown();
-//    }
-
-//    private boolean isHebrewInText(String textToSpeak) {
-//
-//        Matcher m = _p.matcher(textToSpeak);
-//
-//        if (m.find()) {
-//            Log.d(LOG_TAG, "****************the text has hebrew letters");
-//            return true;
-//        }
-//        else {
-//            Log.d(LOG_TAG, "*****************test has no hebrew");
-//            return false;
-//        }
-//    }
-
-//    private String printSet(Set<String> set) {
-//        StringBuffer buffer = new StringBuffer();
-//
-//        for (String item : set) {
-//            buffer.append(item);
-//            buffer.append(", ");
-//        }
-//
-//        return buffer.toString();
-//    }
 
     private NiyoSpeaker getSpeaker(String pkgName) {
         NiyoSpeaker speaker = _speakers.get(pkgName);

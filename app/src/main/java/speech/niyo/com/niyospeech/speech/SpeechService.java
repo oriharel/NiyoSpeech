@@ -8,8 +8,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
 import android.content.Intent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.NotificationCompat;
@@ -30,15 +32,13 @@ import speech.niyo.com.niyospeech.R;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class SpeechService extends Service implements AudioManager.OnAudioFocusChangeListener {
+public class SpeechService extends Service implements AudioManager.OnAudioFocusChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String LOG_TAG = SpeechService.class.getSimpleName();
     public static final String SPEAKING_TEXT_EXTRA = "speaking_text_extra";
     public static final String SPEAK_RESOLVER_EXTRA = "speak_resolver_extra";
 
     private TextToSpeech _tts;
-//    private TextToSpeech _chosenTts;
-//    private TextToSpeech _englishTts;
     private Pattern _p = Pattern.compile("\\p{InHebrew}");
 
 
@@ -46,6 +46,9 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
     public void onCreate(){
         super.onCreate();
         Log.d(LOG_TAG, "onCreate is called");
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -53,6 +56,11 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
 
         final String textToSpeak = intent.getStringExtra(SPEAKING_TEXT_EXTRA);
         final NiyoSpeaker speaker = (NiyoSpeaker)intent.getSerializableExtra(SPEAK_RESOLVER_EXTRA);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("shutup", false);
+        editor.commit();
 
         Log.d(LOG_TAG, "onStartCommand started with "+textToSpeak);
 
@@ -182,5 +190,27 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        Log.d(LOG_TAG, "onSharedPreferenceChanged received with "+key);
+        if (key.equals("shutup")) {
+            Log.d(LOG_TAG, "onSharedPreferenceChanged being told to shut up");
+            if (sharedPreferences.getBoolean(key, false)) {
+                Log.d(LOG_TAG, "shutting up!");
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("shutup", false);
+                editor.commit();
+                stopSelf();
+            }
+            else {
+                Log.d(LOG_TAG, "Not Shutting up!");
+            }
+        }
+        else {
+            Log.d(LOG_TAG, "called with not shutup");
+        }
     }
 }

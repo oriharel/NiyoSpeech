@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +49,9 @@ public class SpeechReaderActivity extends Activity {
                 handleSendText(intent); // Handle text being sent
             }
         }
+
+        TextView tv = (TextView)findViewById(R.id.reader_text);
+        tv.setMovementMethod(new ScrollingMovementMethod());
     }
 
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
