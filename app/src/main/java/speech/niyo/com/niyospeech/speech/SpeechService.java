@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeechService;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -60,7 +61,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("shutup", false);
-        editor.commit();
+        editor.apply();
 
         Log.d(LOG_TAG, "onStartCommand started with "+textToSpeak);
 
@@ -80,7 +81,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
                 };
 
 
-                int result = am.requestAudioFocus(audioListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+                int result = am.requestAudioFocus(audioListener, AudioManager.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
 
 
                 if (status == TextToSpeech.SUCCESS && result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -112,14 +113,6 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
 
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, id.toString());
-                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (mBluetoothAdapter != null) {
-                        Log.d(LOG_TAG, "Bluetooth detected");
-                        int state = mBluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP);
-                        if (state == BluetoothProfile.STATE_CONNECTED) {
-                            params.put(TextToSpeech.Engine.KEY_PARAM_STREAM, Integer.toString(AudioManager.STREAM_RING));
-                        }
-                    }
                     speaker.speak(textToSpeak, _tts, params);
                     showSpeakingNotification();
 
@@ -185,6 +178,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
         Log.d(LOG_TAG, "onDestroy called");
         removeSpeakingNotification();
         _tts.shutdown();
+        super.onDestroy();
     }
 
     @Override
@@ -202,7 +196,7 @@ public class SpeechService extends Service implements AudioManager.OnAudioFocusC
                 Log.d(LOG_TAG, "shutting up!");
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("shutup", false);
-                editor.commit();
+                editor.apply();
                 stopSelf();
             }
             else {

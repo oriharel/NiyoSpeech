@@ -116,6 +116,10 @@ public class NiyoNotifService extends NotificationListenerService {
 
         String textToSpeak = appName+", "+speaker.resolveText(notif);
 
+        if (textToSpeak.contains("http://") || textToSpeak.contains("https://")) {
+            textToSpeak = appName+", sent a link";
+        }
+
         Intent speakIntent = new Intent(this, SpeechService.class);
         speakIntent.putExtra(SpeechService.SPEAKING_TEXT_EXTRA, textToSpeak);
         speakIntent.putExtra(SpeechService.SPEAK_RESOLVER_EXTRA, speaker);
@@ -150,27 +154,4 @@ public class NiyoNotifService extends NotificationListenerService {
 
     }
 
-//    @Override
-//    public void onInit(int status) {
-//        Log.d(LOG_TAG, "text to speech initialized");
-//    }
-
-
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//
-//        Log.d(LOG_TAG, "onSharedPreferenceChanged received with "+key);
-//        if (key.equals("shutup")) {
-//            Log.d(LOG_TAG, "onSharedPreferenceChanged being told to shut up");
-//            if (sharedPreferences.getBoolean(key, false)) {
-//                _chosenTts.stop();
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-//                editor.putBoolean("shutup", false);
-//                editor.apply();
-//            }
-//        }
-//        else {
-//            Log.d(LOG_TAG, "called with not shutup");
-//        }
-//    }
 }
